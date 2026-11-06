@@ -453,6 +453,9 @@ states
 stdin
 stdout
 ste
+ste fix
+ste prepare
+ste scan
 ste-check
 ste-fix
 ste-simplify
@@ -529,6 +532,10 @@ viewport
 warning
 warnings
 web
+web site
+web sites
+website
+websites
 window
 word
 words

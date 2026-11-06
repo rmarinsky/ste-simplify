@@ -143,8 +143,8 @@ class Dictionary:
         p = find_path(path)
         if not p:
             raise MissingDictionary(
-                "No STE dictionary found. Build it once from your own copy of the standard:\n"
-                "  ste build-dictionary /path/to/ASD-STE100.pdf\n"
+                "No STE dictionary found. Make it one time (the command downloads the PDF from ASD):\n"
+                "  ste prepare\n"
                 f"It writes {DEFAULT_PATH}. Or pass --dictionary FILE, or set STE_DICTIONARY.\n"
                 "Request the free PDF at https://www.asd-ste100.org")
         with open(p, encoding="utf-8") as f:

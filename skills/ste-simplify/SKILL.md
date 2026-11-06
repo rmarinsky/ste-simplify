@@ -1,6 +1,6 @@
 ---
 name: ste-simplify
-description: Change English text into Simplified Technical English (STE, compatible with ASD-STE100), and check it with a script. Use it for skills, agent files, prompts, specs, READMEs, docs and chat replies. Use it when the user writes "STE", "Simplified Technical English", "rewrite in STE", "simplify this", "make this simple English", "check STE" or "ste check". Also use it when a skill or an agent file must be clear for a model.
+description: Change English text into Simplified Technical English (STE, compatible with ASD-STE100), and check it with a script. Use it for skills, agent files, prompts, specs, READMEs, docs and chat replies. Use it when the user writes "STE", "Simplified Technical English", "rewrite in STE", "simplify this", "make this simple English", "check STE" or "ste scan". Also use it when a skill or an agent file must be clear for a model.
 ---
 
 # Simplified Technical English
@@ -16,11 +16,13 @@ Use the first command that operates:
 1. `ste` (installed with `pipx install git+https://github.com/rmarinsky/ste-simplify`).
 2. `python3 <skill folder>/scripts/ste.py`. The skill folder is the folder of this file.
 
-The script uses a local dictionary. If the script shows "No STE dictionary found", stop. Tell the user to get the free STE PDF from https://www.asd-ste100.org. Then tell the user to run this command one time:
+The script uses a local dictionary. If the script shows "No STE dictionary found", tell the user that you will make it. Then run this command one time:
 
 ```bash
-ste build-dictionary /path/to/ASD-STE100.pdf
+ste prepare
 ```
+
+The command downloads the PDF from the ASD web site to the computer of the user, and makes the dictionary from it. If the command does not operate, tell the user to request a free copy on https://www.asd-ste100.org/STE_downloads.html, and to run `ste prepare /path/to/the.pdf`.
 
 Do not write a word list. Do not get word lists from the web. The dictionary is the property of ASD.
 
@@ -29,10 +31,10 @@ Do not write a word list. Do not get word lists from the web. The dictionary is 
 1. Make the plan:
 
    ```bash
-   ste plan FILE
+   ste fix FILE
    ```
 
-   For text that is not in a file, for example a chat reply, send the text to stdin: `printf '%s\n' "$TEXT" | ste plan -`.
+   For text that is not in a file, for example a chat reply, send the text to stdin: `printf '%s\n' "$TEXT" | ste fix -`.
 
    The plan has two parts:
    - Safe replacements, with numbers. A safe replacement has one approved alternative with the same part of speech.
@@ -48,17 +50,17 @@ Do not write a word list. Do not get word lists from the web. The dictionary is 
 4. Apply the safe replacements that the user approved:
 
    ```bash
-   ste apply --skip 2,5 FILE
+   ste fix --apply --skip 2,5 FILE
    ```
 
    If the user approved all of them, do not use `--skip`. If the user approved only some of them, use `--only 1,3`.
 
 5. Write the approved sentences into the file. Do not change other text.
 
-6. Run the check:
+6. Examine the result:
 
    ```bash
-   ste check FILE
+   ste scan FILE
    ```
 
    If the check shows errors, do steps 1 to 6 again for these errors only.

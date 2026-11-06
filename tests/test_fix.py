@@ -98,7 +98,7 @@ class PushbackTests(unittest.TestCase):
 
 
 def apply_main(argv):
-    return fix.main(argv, apply=True)
+    return fix.main(["--apply", *argv])
 
 
 if __name__ == "__main__":

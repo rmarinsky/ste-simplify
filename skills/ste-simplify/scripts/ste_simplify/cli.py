@@ -1,9 +1,9 @@
 """ste: one command for Simplified Technical English (STE).
 
-  ste check PATH...              report problems (for CI: exit code 1 when there are errors)
-  ste plan PATH...               numbered plan: safe replacements and sentences to write again
-  ste apply [--skip N,N] PATH... apply the safe replacements that the person kept
-  ste build-dictionary PDF       make your local dictionary from your copy of the standard
+  ste prepare [PDF]                       make your local dictionary (downloads the PDF from ASD if necessary)
+  ste scan PATH...                        report problems (exit code 1 when there are errors)
+  ste fix PATH...                         numbered plan: safe replacements and sentences to write again
+  ste fix --apply [--skip N,N] PATH...    write the safe replacements that the person kept
 
 Run "ste COMMAND --help" for the options of a command.
 """
@@ -21,14 +21,12 @@ def main(argv=None):
         print(f"ste {__version__}")
         return 0
     cmd, rest = argv[0], argv[1:]
-    if cmd == "check":
-        return check.main(rest, prog="ste check")
-    if cmd == "plan":
-        return fix.main(rest, apply=False, prog="ste plan")
-    if cmd == "apply":
-        return fix.main(rest, apply=True, prog="ste apply")
-    if cmd in ("build-dictionary", "build"):
+    if cmd == "prepare":
         return build.main(rest)
+    if cmd == "scan":
+        return check.main(rest)
+    if cmd == "fix":
+        return fix.main(rest)
     print(f"Unknown command: {cmd}\n\n{__doc__.strip()}", file=sys.stderr)
     return 2
 

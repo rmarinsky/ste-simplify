@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run ste without install: python3 ste.py check|plan|apply|build-dictionary ..."""
+"""Run ste without install: python3 ste.py prepare|scan|fix ..."""
 import os
 import sys
 

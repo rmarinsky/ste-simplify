@@ -159,9 +159,9 @@ class CliTests(unittest.TestCase):
 class DispatcherTests(unittest.TestCase):
     def test_subcommands(self):
         from ste_simplify import cli
-        code, out = run_cli(lambda a: cli.main(["check", *a]), ["-"], stdin="Use the tool.\n")
+        code, out = run_cli(lambda a: cli.main(["scan", *a]), ["-"], stdin="Use the tool.\n")
         self.assertEqual(code, 0)
-        code, out = run_cli(lambda a: cli.main(["plan", *a]), ["-"], stdin="Utilize the tool.\n")
+        code, out = run_cli(lambda a: cli.main(["fix", *a]), ["-"], stdin="Utilize the tool.\n")
         self.assertIn("Utilize -> Use", out)
         self.assertEqual(cli.main(["nothing"]), 2)
 

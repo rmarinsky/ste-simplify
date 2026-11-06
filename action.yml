@@ -1,22 +1,23 @@
 name: STE check
-description: Check docs and instructions for Simplified Technical English (STE) with ste check.
+description: Check docs and instructions for Simplified Technical English (STE) with ste scan.
 branding:
   icon: check-square
   color: blue
 inputs:
   paths:
-    description: Files or folders that ste check examines. Put a space between two paths.
+    description: Files or folders that ste scan examines. Put a space between two paths.
     default: "."
   args:
-    description: More arguments for ste check, for example "--fail-on warning --no-unknown".
+    description: More arguments for ste scan, for example "--fail-on warning --no-unknown".
     default: ""
   dictionary-b64:
     description: >
+      Optional. If it is empty, the action runs "ste prepare", which downloads the PDF from ASD on the runner.
       Your STE dictionary as text (gzip, then Base64). Keep it in a repository secret. To make it, use the
-      command "ste build-dictionary --lite FILE.pdf -o d.json && gzip -9c d.json | base64".
+      command "ste prepare --lite -o d.json && gzip -9c d.json | base64".
     default: ""
   dictionary-path:
-    description: Path of a dictionary file on the runner.
+    description: Optional. Path of a dictionary file on the runner.
     default: ""
   sarif:
     description: Path for a SARIF report. If it is empty, there is no SARIF report.
@@ -30,6 +31,12 @@ runs:
     - name: Install ste
       shell: bash
       run: python -m pip install --quiet "${{ github.action_path }}"
+    - name: Cache the dictionary
+      if: inputs.dictionary-b64 == '' && inputs.dictionary-path == ''
+      uses: actions/cache@v4
+      with:
+        path: ~/.config/ste-simplify
+        key: ste-dictionary-issue9-${{ runner.os }}
     - name: Get the dictionary
       shell: bash
       env:
@@ -42,11 +49,11 @@ runs:
           mkdir -p "$RUNNER_TEMP/ste"
           printf '%s' "$STE_B64" | base64 -d | gunzip > "$RUNNER_TEMP/ste/dictionary.json"
           echo "STE_DICTIONARY=$RUNNER_TEMP/ste/dictionary.json" >> "$GITHUB_ENV"
-        else
-          echo "::error::No STE dictionary. Set the dictionary-b64 or the dictionary-path input."
-          exit 2
+        elif [ ! -f ~/.config/ste-simplify/dictionary.json ]; then
+          command -v pdftotext >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils; }
+          ste prepare
         fi
-    - name: Run ste check
+    - name: Run ste scan
       shell: bash
       env:
         STE_PATHS: ${{ inputs.paths }}
@@ -55,6 +62,6 @@ runs:
       run: |
         set +e
         if [ -n "$STE_SARIF" ]; then
-          ste check $STE_ARGS --format sarif -o "$STE_SARIF" --fail-on never $STE_PATHS
+          ste scan $STE_ARGS --format sarif -o "$STE_SARIF" --fail-on never $STE_PATHS
         fi
-        ste check $STE_ARGS $STE_PATHS
+        ste scan $STE_ARGS $STE_PATHS

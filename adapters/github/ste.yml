@@ -1,9 +1,7 @@
 # Copy this file to .github/workflows/ste.yml.
-# Before you use it, add the repository secret STE_DICTIONARY_B64:
-#   ste build-dictionary --lite ASD-STE100.pdf -o ste-lite.json
-#   gzip -9c ste-lite.json | base64 | gh secret set STE_DICTIONARY_B64
-# The dictionary is copyrighted by ASD. Keep it in a secret. Do not commit it.
-name: STE check
+# The action runs "ste prepare" on the runner: it downloads the PDF from the ASD web site and makes
+# the dictionary there. The dictionary stays in the runner cache. Do not commit it.
+name: STE scan
 on:
   pull_request:
     paths: ["**/*.md", "**/*.mdx", "**/*.rst", "**/*.txt"]
@@ -15,11 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: rmarinsky/ste-simplify@v0.1.0
+      - uses: rmarinsky/ste-simplify@v0.2.0
         with:
           paths: "docs README.md"
           args: "--no-unknown"
-          dictionary-b64: ${{ secrets.STE_DICTIONARY_B64 }}
           sarif: ste.sarif
       - uses: github/codeql-action/upload-sarif@v3
         if: always() && hashFiles('ste.sarif') != ''

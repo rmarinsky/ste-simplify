@@ -1,15 +1,15 @@
-"""ste plan / ste apply: a replacement plan, and the safe one-to-one replacements.
+"""ste fix: a replacement plan, and the safe one-to-one replacements.
 
 A replacement is safe when the dictionary gives exactly one alternative, with
 the same part of speech, for a word in its base form. All other findings go
 into a list of sentences that a person or a model must write again.
 
 Usage examples:
-  ste plan docs/                      show the numbered plan, change nothing
-  ste apply docs/                     apply all safe replacements
-  ste apply --skip 2,5 docs/          keep items 2 and 5 of the plan as they are
-  ste plan --format json SKILL.md     the plan for a model
-  cat reply.md | ste apply -          print the fixed text
+  ste fix docs/                       show the numbered plan, change nothing
+  ste fix --apply docs/               apply all safe replacements
+  ste fix --apply --skip 2,5 docs/    keep items 2 and 5 of the plan as they are
+  ste fix --format json SKILL.md      the plan for a model
+  cat reply.md | ste fix --apply -    print the fixed text
 """
 import argparse
 import collections
@@ -159,19 +159,21 @@ def ids(spec):
     return out
 
 
-def main(argv=None, apply=False, prog="ste plan"):
+def main(argv=None, prog="ste fix"):
     ap = argparse.ArgumentParser(prog=prog, description=(
-        "Apply the safe replacements of the plan." if apply else
-        "Show the plan: safe replacements (numbered) and sentences to write again. Changes nothing."),
+        "Show the plan: numbered safe replacements and sentences to write again. "
+        "With --apply, write the safe replacements."),
         epilog=__doc__.split("\n\n", 2)[2], formatter_class=argparse.RawDescriptionHelpFormatter)
     add_common_args(ap)
-    if apply:
-        ap.add_argument("--skip", metavar="N,N", help="numbers from the plan to leave as they are, for example 2,5-7")
-        ap.add_argument("--only", metavar="N,N", help="apply only these numbers from the plan")
+    ap.add_argument("--apply", action="store_true", help="write the safe replacements to the files")
+    ap.add_argument("--skip", metavar="N,N", help="with --apply: numbers from the plan to leave as they are, "
+                                                 "for example 2,5-7")
+    ap.add_argument("--only", metavar="N,N", help="with --apply: apply only these numbers from the plan")
     ap.add_argument("--format", choices=("text", "json"), default="text")
     ap.add_argument("--no-unknown", action="store_true", help="leave out words that are not in the dictionary")
     a = ap.parse_args(argv)
-    a.apply = apply
+    if (a.skip or a.only) and not a.apply:
+        ap.error("--skip and --only need --apply")
     stdin_text = None
     if "-" in a.paths:
         stdin_text = sys.stdin.read()
@@ -231,8 +233,8 @@ def main(argv=None, apply=False, prog="ste plan"):
         for p in sorted(applied, key=lambda p: (p["path"], p["line"])):
             out.write(f"  {p['path']}:{p['line']}  {p['word']} -> {p['replacement']}\n")
     elif safe:
-        out.write(f"Safe replacements ({len(safe)}). To write them, run `ste apply` "
-                  "(use --skip N,N for the ones to keep):\n")
+        out.write(f"Safe replacements ({len(safe)}). To write them, run `ste fix --apply` "
+                  "(add --skip N,N for the ones to keep):\n")
         for p in safe:
             out.write(f"  [{p['id']}] {p['path']}:{p['line']}:{p['col']}  {p['word']} -> {p['replacement']}\n")
     else:
@@ -264,4 +266,4 @@ class _Reader:
 
 
 if __name__ == "__main__":
-    sys.exit(main(apply="--apply" in sys.argv))
+    sys.exit(main())

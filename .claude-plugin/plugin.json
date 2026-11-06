@@ -1,6 +1,6 @@
 {
   "name": "ste-simplify",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Write and check text in Simplified Technical English (STE). A skill and one script: the script finds the problems and makes a plan, the user approves it, and the model writes the flagged sentences again.",
   "author": {
     "name": "Roman Marinskyi",

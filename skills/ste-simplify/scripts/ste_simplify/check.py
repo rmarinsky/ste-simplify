@@ -1,9 +1,9 @@
-"""ste check: find words and sentences that do not obey Simplified Technical English (STE).
+"""ste scan: find words and sentences that do not obey Simplified Technical English (STE).
 
 Usage examples:
-  ste check README.md docs/
-  ste check --format sarif -o ste.sarif .
-  echo "You should utilize the tool." | ste check -
+  ste scan README.md docs/
+  ste scan --format sarif -o ste.sarif .
+  echo "You should utilize the tool." | ste scan -
 
 Exit codes: 0 no findings at the --fail-on level, 1 findings, 2 setup error.
 """
@@ -705,7 +705,7 @@ def run(checker, a):
     return results
 
 
-def main(argv=None, prog="ste check"):
+def main(argv=None, prog="ste scan"):
     ap = argparse.ArgumentParser(prog=prog, description="Check text against Simplified Technical English.",
                                  epilog=__doc__.split("\n\n", 1)[1], formatter_class=argparse.RawDescriptionHelpFormatter)
     add_common_args(ap)

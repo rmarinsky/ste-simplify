@@ -2,7 +2,7 @@
 """Build a local STE dictionary (JSON) from your own copy of the official PDF.
 
 Usage:
-  ste build-dictionary PDF [-o OUT.json] [--lite]
+  ste prepare [PDF] [-o OUT.json] [--lite]
 
 The script reads word positions with `pdftotext -bbox` (poppler) and splits
 each dictionary page into its four columns. It writes one JSON file with all
@@ -325,15 +325,77 @@ def lite(entry):
     return out
 
 
+PDF_URL = "https://www.asd-ste100.org/assets/files/ASD-STE100_ISSUE9.pdf"
+REQUEST_PAGE = "https://www.asd-ste100.org/STE_downloads.html"
+
+
+def cache_dir():
+    base = os.environ.get("XDG_CACHE_HOME") or os.path.expanduser("~/.cache")
+    return os.path.join(base, "ste-simplify")
+
+
+def find_pdf(dirs):
+    """Return the newest ASD-STE100*.pdf in the folders, or None."""
+    found = []
+    for d in dirs:
+        d = os.path.expanduser(d)
+        if os.path.isdir(d):
+            found += [os.path.join(d, f) for f in os.listdir(d)
+                      if f.lower().startswith("asd-ste100") and f.lower().endswith(".pdf")]
+    return max(found, key=os.path.getmtime) if found else None
+
+
+def download(url, dest):
+    """Download the PDF from ASD to dest. Return dest, or None if it fails."""
+    import urllib.request
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    tmp = dest + ".part"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "ste-simplify"})
+        with urllib.request.urlopen(req, timeout=60) as r, open(tmp, "wb") as f:
+            f.write(r.read())
+        with open(tmp, "rb") as f:
+            if f.read(5) != b"%PDF-":
+                raise ValueError("the file is not a PDF")
+        os.replace(tmp, dest)
+        return dest
+    except Exception as e:  # network errors, HTTP errors, a changed URL
+        print(f"Download failed: {e}", file=sys.stderr)
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        return None
+
+
 def main(argv=None):
-    ap = argparse.ArgumentParser(prog="ste build-dictionary", description=__doc__.split("\n")[0])
-    ap.add_argument("pdf")
+    ap = argparse.ArgumentParser(
+        prog="ste prepare",
+        description="Make your local STE dictionary. Without PDF, the command looks for ASD-STE100*.pdf in "
+                    "~/Downloads and in the cache. If there is no PDF, it downloads the PDF from the ASD web site "
+                    "to your computer.")
+    ap.add_argument("pdf", nargs="?", help="your copy of the ASD-STE100 PDF")
     ap.add_argument("-o", "--out", default=default_out())
+    ap.add_argument("--url", default=PDF_URL, help="where to download the PDF (default: the ASD web site)")
+    ap.add_argument("--no-download", action="store_true", help="do not download, use only a local PDF")
     ap.add_argument("--lite", action="store_true",
                     help="omit meanings and example sentences (a small file, for CI secrets)")
     a = ap.parse_args(argv)
-    if not os.path.isfile(a.pdf):
-        sys.exit(f"PDF not found: {a.pdf}")
+    if a.pdf:
+        if not os.path.isfile(a.pdf):
+            print(f"PDF not found: {a.pdf}", file=sys.stderr)
+            return 2
+    else:
+        a.pdf = find_pdf(["~/Downloads", cache_dir()])
+        if a.pdf:
+            print(f"Using {a.pdf}")
+        elif not a.no_download:
+            dest = os.path.join(cache_dir(), os.path.basename(a.url.split("?")[0]) or "ASD-STE100.pdf")
+            print(f"Downloading the PDF from ASD: {a.url}")
+            a.pdf = download(a.url, dest)
+        if not a.pdf:
+            print("No ASD-STE100 PDF. Request a free copy from ASD, then run:\n"
+                  "  ste prepare /path/to/ASD-STE100.pdf\n"
+                  f"Request page: {REQUEST_PAGE}", file=sys.stderr)
+            return 2
     entries = parse(bbox_xhtml(a.pdf))
     if a.lite:
         entries = [lite(e) for e in entries]

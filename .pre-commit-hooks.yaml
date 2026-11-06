@@ -1,7 +1,7 @@
 - id: ste-check
   name: STE check (Simplified Technical English)
-  description: Checks Markdown, text, reStructuredText and YAML descriptions with ste check.
-  entry: ste check
+  description: Checks Markdown, text, reStructuredText and YAML descriptions with ste scan.
+  entry: ste scan
   language: python
   types_or: [markdown, plain-text, rst, yaml]
   require_serial: true

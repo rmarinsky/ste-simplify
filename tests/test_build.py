@@ -1,5 +1,9 @@
+import io
 import os
+import shutil
+import tempfile
 import unittest
+from contextlib import redirect_stderr
 
 import helpers  # noqa: F401  (sets sys.path)
 from ste_simplify import build
@@ -115,6 +119,39 @@ class BuildTests(unittest.TestCase):
         p = Page()
         p.row("main (adj)", "PRIMARY (adj)", "THE PRIMARY CAUSE.", "The main cause.")
         self.assertEqual(build.parse(p.xhtml(page_id="2-0-3")), [])
+
+
+class PrepareTests(unittest.TestCase):
+    def setUp(self):
+        self.dir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.dir)
+
+    def test_find_newest_pdf(self):
+        for name in ("ASD-STE100_ISSUE8.pdf", "ASD-STE100_ISSUE9.pdf", "other.pdf"):
+            with open(os.path.join(self.dir, name), "wb") as f:
+                f.write(b"%PDF-1.7")
+        os.utime(os.path.join(self.dir, "ASD-STE100_ISSUE8.pdf"), (1, 1))
+        self.assertEqual(os.path.basename(build.find_pdf([self.dir])), "ASD-STE100_ISSUE9.pdf")
+        self.assertIsNone(build.find_pdf([os.path.join(self.dir, "none")]))
+
+    def test_download_checks_the_file_type(self):
+        src = os.path.join(self.dir, "a.pdf")
+        with open(src, "wb") as f:
+            f.write(b"%PDF-1.7 test")
+        dest = os.path.join(self.dir, "cache", "b.pdf")
+        self.assertEqual(build.download("file://" + src, dest), dest)
+        with open(src, "wb") as f:
+            f.write(b"<html>not a pdf</html>")
+        self.assertIsNone(build.download("file://" + src, dest + "2"))
+        self.assertFalse(os.path.exists(dest + "2.part"))
+
+    def test_no_pdf_shows_the_request_page(self):
+        err = io.StringIO()
+        with redirect_stderr(err):
+            code = build.main([os.path.join(self.dir, "missing.pdf")])
+        self.assertEqual(code, 2)
 
 
 @unittest.skipUnless(os.environ.get("STE_PDF"), "set STE_PDF to the official PDF to run this test")
