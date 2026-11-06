@@ -726,6 +726,8 @@ def main(argv=None, prog="ste scan"):
     ap.add_argument("--rules-only", action="store_true", help="check only the writing rules, not words")
     ap.add_argument("--summary", action="store_true", help="one line for each file")
     ap.add_argument("--version", action="version", version=f"ste {__version__}")
+    from . import report
+    report.add_args(ap)
     a = ap.parse_args(argv)
     try:
         checker = make_checker(a)
@@ -733,7 +735,12 @@ def main(argv=None, prog="ste scan"):
         print(e, file=sys.stderr)
         return 2
     results = run(checker, a)
-    out = open(a.output, "w", encoding="utf-8") if a.output else sys.stdout
+    if a.html:
+        from . import fix, report
+        from .dictionary import find_path
+        plan = fix.plan_for(checker.d, results)
+        report.emit(a, results, plan, fix.by_sentence(results, plan), find_path(a.dictionary))
+    out = open(a.output, "w", encoding="utf-8") if a.output else (open(os.devnull, "w") if a.html else sys.stdout)
     try:
         if a.format == "json":
             report_json(results, out)
@@ -742,7 +749,7 @@ def main(argv=None, prog="ste scan"):
         else:
             report_text(results, out, a.examples, not a.no_unknown, a.summary)
     finally:
-        if a.output:
+        if out is not sys.stdout:
             out.close()
     if a.fail_on == "never":
         return 0

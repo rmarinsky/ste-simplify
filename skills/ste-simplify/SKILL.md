@@ -40,7 +40,10 @@ Do not write a word list. Do not get word lists from the web. The dictionary is 
    - Safe replacements, with numbers. A safe replacement has one approved alternative with the same part of speech.
    - Sentences to write again, with the problem words, the approved alternatives and an STE example for each alternative.
 
-2. Show the plan to the user. Show the safe replacements and, for each sentence, the new sentence that you write. Then stop and wait for the answer of the user.
+2. Show the plan to the user:
+   - Run `ste fix --html FILE`. This opens a full report in the browser of the user. In the report, the user can remove the safe replacements that are not correct and select words for the allow-list.
+   - In the chat, show the short table, and for each sentence, the new sentence that you write.
+   - Then stop and wait for the answer of the user. The user can give you the `ste fix --apply --skip N,N` command from the report.
 
 3. Use the answer of the user:
    - For safe replacements that the user does not want, write their numbers in `--skip`.

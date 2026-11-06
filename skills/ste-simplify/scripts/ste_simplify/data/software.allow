@@ -59,15 +59,21 @@ buttons
 cache
 carousel
 chat
+check box
+check boxes
 checkbox
 checker
 checklist
 clamp
 claude
 cli
+click
+clicked
+clicks
 client
 clients
 clip
+clipboard
 code block
 code blocks
 code scanning
@@ -175,6 +181,8 @@ fetch
 field
 file
 files
+filter
+filters
 firmware
 flag
 flags
@@ -296,6 +304,7 @@ momentum
 monorepo
 motion
 mount
+mouse pointer
 ms
 namespace
 native

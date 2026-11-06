@@ -18,7 +18,8 @@ import os
 import sys
 
 from .check import add_common_args, make_checker, run, short
-from .dictionary import MissingDictionary
+from . import report
+from .dictionary import MissingDictionary, find_path
 
 WORD_RULES = ("not-approved", "wrong-pos", "wrong-form", "ing-form", "unknown-word")
 
@@ -171,6 +172,7 @@ def main(argv=None, prog="ste fix"):
     ap.add_argument("--only", metavar="N,N", help="with --apply: apply only these numbers from the plan")
     ap.add_argument("--format", choices=("text", "json"), default="text")
     ap.add_argument("--no-unknown", action="store_true", help="leave out words that are not in the dictionary")
+    report.add_args(ap)
     a = ap.parse_args(argv)
     if (a.skip or a.only) and not a.apply:
         ap.error("--skip and --only need --apply")
@@ -215,6 +217,9 @@ def main(argv=None, prog="ste fix"):
             results = run(checker, a)
             plan = plan_for(checker.d, results)
     rewrite = by_sentence(results, plan if not a.apply else [])
+    if a.html and not a.apply:
+        report.emit(a, results, plan, rewrite, find_path(a.dictionary), stdin_text)
+        return 0
     if a.format == "json":
         json.dump({"applied": [_clean(p) for p in applied],
                    "safe": [] if a.apply else [_clean(p) for p in plan if p["replacement"]],

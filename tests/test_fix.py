@@ -103,3 +103,34 @@ def apply_main(argv):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ReportTests(unittest.TestCase):
+    def test_table_and_html(self):
+        import io
+        from ste_simplify import report
+        text = "You should utilize the tool. It is an issue.\nUse the gizmo; it's short.\n"
+        fs = check(text)
+        results = [("a.md", fs)]
+        plan = fix.plan_for(mini_dictionary(), results)
+        rewrite = fix.by_sentence(results, plan)
+        out = io.StringIO()
+        report.table(report.summarize(results, plan), out)
+        self.assertIn("Total (1 file)", out.getvalue())
+        page = report.render(results, plan, rewrite, ["a.md"], {"a.md": text}, {"when": "now"})
+        self.assertIn("<del>utilize</del><ins>use</ins>", page)
+        self.assertIn('class="keep" data-id="1"', page)
+        self.assertIn('<mark class="w-not-approved"', page)
+        self.assertIn('value="gizmo"', page)
+        self.assertIn("ste fix --apply a.md", page)
+        self.assertIn("Do not publish", page)
+
+    def test_write_does_not_open_with_no_open(self):
+        from ste_simplify import report
+        d = tempfile.mkdtemp()
+        try:
+            p = report.write([("a.md", [])], [], [], ["a.md"], {"a.md": ""}, {"when": "now"},
+                             os.path.join(d, "r.html"), open_it=False)
+            self.assertTrue(os.path.getsize(p) > 1000)
+        finally:
+            shutil.rmtree(d)
