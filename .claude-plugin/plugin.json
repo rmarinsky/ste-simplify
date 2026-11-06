@@ -1,0 +1,10 @@
+{
+  "name": "ste-simplify",
+  "version": "0.1.0",
+  "description": "Write and check text in Simplified Technical English (STE). A skill, an agent that writes skill and agent files again in STE, and scripts that check words and writing rules.",
+  "author": { "name": "Roman Marinskyi", "url": "https://github.com/rmarinsky" },
+  "homepage": "https://github.com/rmarinsky/ste-simplify",
+  "repository": "https://github.com/rmarinsky/ste-simplify",
+  "license": "MIT",
+  "keywords": ["simplified-technical-english", "ste", "plain-language", "controlled-language", "technical-writing", "prompt-engineering", "lint"]
+}

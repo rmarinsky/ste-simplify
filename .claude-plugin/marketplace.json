@@ -1,0 +1,11 @@
+{
+  "name": "ste-simplify",
+  "owner": { "name": "Roman Marinskyi", "url": "https://github.com/rmarinsky" },
+  "plugins": [
+    {
+      "name": "ste-simplify",
+      "source": "./",
+      "description": "Write and check text in Simplified Technical English (STE)."
+    }
+  ]
+}

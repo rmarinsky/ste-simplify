@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ste-simplify"
+version = "0.1.0"
+description = "Check and fix text for Simplified Technical English (STE). Builds the dictionary from your own copy of the standard."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Roman Marinskyi" }]
+requires-python = ">=3.9"
+dependencies = []
+keywords = ["simplified technical english", "ste", "plain language", "controlled language", "technical writing", "linter"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Topic :: Documentation",
+  "Topic :: Text Processing :: Linguistic",
+  "Environment :: Console",
+]
+
+[project.urls]
+Homepage = "https://github.com/rmarinsky/ste-simplify"
+
+[project.scripts]
+ste-check = "ste_simplify.check:main"
+ste-fix = "ste_simplify.fix:main"
+ste-build-dictionary = "ste_simplify.build:main"
+
+[tool.setuptools]
+package-dir = { "" = "skills/ste-simplify/scripts" }
+packages = ["ste_simplify"]
+
+[tool.setuptools.package-data]
+ste_simplify = ["data/*.allow"]

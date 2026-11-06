@@ -1,0 +1,1228 @@
+{
+ "schema": 1,
+ "source": "synthetic test data, not from the STE standard",
+ "counts": {},
+ "entries": [
+  {
+   "word": "a",
+   "pos": "art",
+   "approved": true,
+   "keys": [
+    "a"
+   ],
+   "forms": [
+    "a"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "an",
+   "pos": "art",
+   "approved": true,
+   "keys": [
+    "an"
+   ],
+   "forms": [
+    "an"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "the",
+   "pos": "art",
+   "approved": true,
+   "keys": [
+    "the"
+   ],
+   "forms": [
+    "the"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "this",
+   "pos": "adj",
+   "approved": true,
+   "keys": [
+    "this"
+   ],
+   "forms": [
+    "this"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "it",
+   "pos": "pron",
+   "approved": true,
+   "keys": [
+    "it"
+   ],
+   "forms": [
+    "it"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "you",
+   "pos": "pron",
+   "approved": true,
+   "keys": [
+    "you"
+   ],
+   "forms": [
+    "you"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "be",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "be"
+   ],
+   "forms": [
+    "are",
+    "be",
+    "is",
+    "was",
+    "were"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "do",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "do"
+   ],
+   "forms": [
+    "did",
+    "do",
+    "does",
+    "done"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "not",
+   "pos": "adv",
+   "approved": true,
+   "keys": [
+    "not"
+   ],
+   "forms": [
+    "not"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "and",
+   "pos": "conj",
+   "approved": true,
+   "keys": [
+    "and"
+   ],
+   "forms": [
+    "and"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "or",
+   "pos": "conj",
+   "approved": true,
+   "keys": [
+    "or"
+   ],
+   "forms": [
+    "or"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "if",
+   "pos": "conj",
+   "approved": true,
+   "keys": [
+    "if"
+   ],
+   "forms": [
+    "if"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "then",
+   "pos": "adv",
+   "approved": true,
+   "keys": [
+    "then"
+   ],
+   "forms": [
+    "then"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "to",
+   "pos": "prep",
+   "approved": true,
+   "keys": [
+    "to"
+   ],
+   "forms": [
+    "to"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "in",
+   "pos": "prep",
+   "approved": true,
+   "keys": [
+    "in"
+   ],
+   "forms": [
+    "in"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "of",
+   "pos": "prep",
+   "approved": true,
+   "keys": [
+    "of"
+   ],
+   "forms": [
+    "of"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "on",
+   "pos": "prep",
+   "approved": true,
+   "keys": [
+    "on"
+   ],
+   "forms": [
+    "on"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "for",
+   "pos": "prep",
+   "approved": true,
+   "keys": [
+    "for"
+   ],
+   "forms": [
+    "for"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "with",
+   "pos": "prep",
+   "approved": true,
+   "keys": [
+    "with"
+   ],
+   "forms": [
+    "with"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "by",
+   "pos": "prep",
+   "approved": true,
+   "keys": [
+    "by"
+   ],
+   "forms": [
+    "by"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "each",
+   "pos": "adj",
+   "approved": true,
+   "keys": [
+    "each"
+   ],
+   "forms": [
+    "each"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "all",
+   "pos": "adj",
+   "approved": true,
+   "keys": [
+    "all"
+   ],
+   "forms": [
+    "all"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "can",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "can"
+   ],
+   "forms": [
+    "can"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "must",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "must"
+   ],
+   "forms": [
+    "must"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "will",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "will"
+   ],
+   "forms": [
+    "will"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "that",
+   "pos": "conj",
+   "approved": true,
+   "keys": [
+    "that"
+   ],
+   "forms": [
+    "that"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "when",
+   "pos": "conj",
+   "approved": true,
+   "keys": [
+    "when"
+   ],
+   "forms": [
+    "when"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "use",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "use"
+   ],
+   "forms": [
+    "use",
+    "used",
+    "uses"
+   ],
+   "meanings": [
+    {
+     "meaning": "To operate a thing",
+     "ste_example": "USE THE TOOL.",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "tool",
+   "pos": "n",
+   "approved": true,
+   "keys": [
+    "tool"
+   ],
+   "forms": [
+    "tool"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "file",
+   "pos": "n",
+   "approved": true,
+   "keys": [
+    "file"
+   ],
+   "forms": [
+    "file"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "start",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "start"
+   ],
+   "forms": [
+    "start",
+    "started",
+    "starts"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "stop",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "stop"
+   ],
+   "forms": [
+    "stop",
+    "stopped",
+    "stops"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "examine",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "examine"
+   ],
+   "forms": [
+    "examine",
+    "examined",
+    "examines"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "write",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "write"
+   ],
+   "forms": [
+    "write",
+    "writes",
+    "written",
+    "wrote"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "read",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "read"
+   ],
+   "forms": [
+    "read",
+    "reads"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "open",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "open"
+   ],
+   "forms": [
+    "open",
+    "opened",
+    "opens"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "close",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "close"
+   ],
+   "forms": [
+    "close",
+    "closed",
+    "closes"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "make sure",
+   "pos": "v",
+   "approved": true,
+   "keys": [
+    "make sure"
+   ],
+   "forms": [
+    "made sure",
+    "make sure",
+    "makes sure"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "primary",
+   "pos": "adj",
+   "approved": true,
+   "keys": [
+    "primary"
+   ],
+   "forms": [
+    "primary"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "problem",
+   "pos": "n",
+   "approved": true,
+   "keys": [
+    "problem"
+   ],
+   "forms": [
+    "problem"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "fault",
+   "pos": "n",
+   "approved": true,
+   "keys": [
+    "fault"
+   ],
+   "forms": [
+    "fault"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "step",
+   "pos": "n",
+   "approved": true,
+   "keys": [
+    "step"
+   ],
+   "forms": [
+    "step"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "result",
+   "pos": "n",
+   "approved": true,
+   "keys": [
+    "result"
+   ],
+   "forms": [
+    "result"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "text",
+   "pos": "n",
+   "approved": true,
+   "keys": [
+    "text"
+   ],
+   "forms": [
+    "text"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "check",
+   "pos": "n",
+   "approved": true,
+   "keys": [
+    "check"
+   ],
+   "forms": [
+    "check"
+   ],
+   "meanings": [
+    {
+     "meaning": "A test",
+     "ste_example": "DO A CHECK OF THE FILE.",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "short",
+   "pos": "adj",
+   "approved": true,
+   "keys": [
+    "short"
+   ],
+   "forms": [
+    "short",
+    "shorter",
+    "shortest"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "sentence",
+   "pos": "n",
+   "approved": true,
+   "keys": [
+    "sentence"
+   ],
+   "forms": [
+    "sentence"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "word",
+   "pos": "n",
+   "approved": true,
+   "keys": [
+    "word"
+   ],
+   "forms": [
+    "word"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "many",
+   "pos": "adj",
+   "approved": true,
+   "keys": [
+    "many"
+   ],
+   "forms": [
+    "many",
+    "more",
+    "most"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "than",
+   "pos": "conj",
+   "approved": true,
+   "keys": [
+    "than"
+   ],
+   "forms": [
+    "than"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "there",
+   "pos": "adv",
+   "approved": true,
+   "keys": [
+    "there"
+   ],
+   "forms": [
+    "there"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "this",
+   "pos": "pron",
+   "approved": true,
+   "keys": [
+    "this"
+   ],
+   "forms": [
+    "this"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "they",
+   "pos": "pron",
+   "approved": true,
+   "keys": [
+    "they"
+   ],
+   "forms": [
+    "they"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "one",
+   "pos": "adj",
+   "approved": true,
+   "keys": [
+    "one"
+   ],
+   "forms": [
+    "one"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "also",
+   "pos": "adv",
+   "approved": true,
+   "keys": [
+    "also"
+   ],
+   "forms": [
+    "also"
+   ],
+   "meanings": [
+    {
+     "meaning": "",
+     "ste_example": "",
+     "non_ste_example": ""
+    }
+   ]
+  },
+  {
+   "word": "utilize",
+   "pos": "v",
+   "approved": false,
+   "keys": [
+    "utilize"
+   ],
+   "alternatives": [
+    {
+     "alternatives": [
+      {
+       "text": "use",
+       "pos": "v"
+      }
+     ],
+     "ste_example": "USE THE TOOL.",
+     "non_ste_example": "Utilize the tool.",
+     "other_meaning": false
+    }
+   ]
+  },
+  {
+   "word": "commence",
+   "pos": "v",
+   "approved": false,
+   "keys": [
+    "commence"
+   ],
+   "alternatives": [
+    {
+     "alternatives": [
+      {
+       "text": "start",
+       "pos": "v"
+      }
+     ],
+     "ste_example": "START THE TEST.",
+     "non_ste_example": "Commence the test.",
+     "other_meaning": false
+    }
+   ]
+  },
+  {
+   "word": "main",
+   "pos": "adj",
+   "approved": false,
+   "keys": [
+    "main"
+   ],
+   "alternatives": [
+    {
+     "alternatives": [
+      {
+       "text": "primary",
+       "pos": "adj"
+      }
+     ],
+     "ste_example": "THE PRIMARY FILE.",
+     "non_ste_example": "The main file.",
+     "other_meaning": false
+    }
+   ]
+  },
+  {
+   "word": "issue",
+   "pos": "n",
+   "approved": false,
+   "keys": [
+    "issue"
+   ],
+   "alternatives": [
+    {
+     "alternatives": [
+      {
+       "text": "problem",
+       "pos": "n"
+      }
+     ],
+     "ste_example": "THERE IS A PROBLEM.",
+     "non_ste_example": "There is an issue.",
+     "other_meaning": false
+    }
+   ]
+  },
+  {
+   "word": "should",
+   "pos": "v",
+   "approved": false,
+   "keys": [
+    "should"
+   ],
+   "alternatives": [
+    {
+     "alternatives": [
+      {
+       "text": "must",
+       "pos": "v"
+      }
+     ],
+     "ste_example": "YOU MUST STOP THE TOOL.",
+     "non_ste_example": "You should stop the tool.",
+     "other_meaning": false
+    },
+    {
+     "alternatives": [
+      {
+       "text": "if",
+       "pos": "conj"
+      }
+     ],
+     "ste_example": "IF IT STOPS, START IT.",
+     "non_ste_example": "Should it stop, start it.",
+     "other_meaning": false
+    }
+   ]
+  },
+  {
+   "word": "check",
+   "pos": "v",
+   "approved": false,
+   "keys": [
+    "check"
+   ],
+   "alternatives": [
+    {
+     "alternatives": [
+      {
+       "text": "examine",
+       "pos": "v"
+      }
+     ],
+     "ste_example": "EXAMINE THE FILE.",
+     "non_ste_example": "Check the file.",
+     "other_meaning": false
+    },
+    {
+     "alternatives": [
+      {
+       "text": "make sure",
+       "pos": "v"
+      }
+     ],
+     "ste_example": "MAKE SURE THAT THE FILE IS CLOSED.",
+     "non_ste_example": "Check that the file is closed.",
+     "other_meaning": false
+    }
+   ]
+  },
+  {
+   "word": "according to",
+   "pos": "prep",
+   "approved": false,
+   "keys": [
+    "according to"
+   ],
+   "alternatives": [
+    {
+     "alternatives": [
+      {
+       "text": "refer",
+       "pos": "v"
+      }
+     ],
+     "ste_example": "REFER TO THE FILE.",
+     "non_ste_example": "According to the file.",
+     "other_meaning": false
+    }
+   ]
+  },
+  {
+   "word": "in case of",
+   "pos": "prep",
+   "approved": false,
+   "keys": [
+    "in case of"
+   ],
+   "alternatives": [
+    {
+     "alternatives": [
+      {
+       "text": "if",
+       "pos": "conj"
+      }
+     ],
+     "ste_example": "IF THERE IS A FAULT, STOP.",
+     "non_ste_example": "In case of a fault, stop.",
+     "other_meaning": false
+    }
+   ]
+  },
+  {
+   "word": "really",
+   "pos": "adv",
+   "approved": false,
+   "keys": [
+    "really"
+   ],
+   "alternatives": [],
+   "help": [
+    "Do not use this word."
+   ]
+  }
+ ]
+}

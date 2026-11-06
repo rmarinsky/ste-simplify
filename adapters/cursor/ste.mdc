@@ -1,0 +1,31 @@
+---
+description: Write docs, prompts and agent instructions in Simplified Technical English (STE). Examine them with ste-check.
+globs: **/*.md, **/*.mdx, **/*.mdc, **/*.rst, **/*.txt
+alwaysApply: false
+---
+
+# Simplified Technical English (STE)
+
+Write the text in these files in Simplified Technical English (STE).
+
+After you change a file, run the checker in the terminal:
+
+```bash
+ste-check path/to/file.md
+```
+
+If `ste-check` is not installed, run `python3 <path to ste-simplify>/skills/ste-simplify/scripts/ste_check.py path/to/file.md`.
+
+1. Run `ste-fix --apply path/to/file.md` to apply the safe word replacements.
+2. Run `ste-fix --format json path/to/file.md`. Write each sentence in the `rewrite` list again with the approved alternatives and the STE examples.
+3. Run `ste-check` again. Do steps 2 and 3 again until the checker shows no errors.
+
+Rules:
+
+- Use only approved words.
+- Write one instruction in each sentence.
+- An instruction has a maximum of 20 words. A descriptive sentence has a maximum of 25 words.
+- Use the active voice.
+- Do not use -ing verb forms, contractions or semicolons.
+
+Do not change code blocks, inline code, commands, paths, URLs, numbers or names. Keep text between quotation marks that users type. If the checker shows "No STE dictionary found", tell the user to run `ste-build-dictionary /path/to/ASD-STE100.pdf`.

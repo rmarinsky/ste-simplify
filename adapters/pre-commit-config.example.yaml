@@ -1,0 +1,10 @@
+# Add this to .pre-commit-config.yaml in your project.
+# The hook reads the dictionary from ~/.config/ste-simplify/dictionary.json or $STE_DICTIONARY.
+# Build it one time: ste-build-dictionary /path/to/ASD-STE100.pdf
+repos:
+  - repo: https://github.com/rmarinsky/ste-simplify
+    rev: v0.1.0
+    hooks:
+      - id: ste-check
+        args: [--no-unknown]
+        files: ^(docs/|README\.md|.*SKILL\.md|agents/)

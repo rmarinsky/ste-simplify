@@ -1,0 +1,60 @@
+name: STE check
+description: Check docs and instructions for Simplified Technical English (STE) with ste-check.
+branding:
+  icon: check-square
+  color: blue
+inputs:
+  paths:
+    description: Files or folders that ste-check examines. Put a space between two paths.
+    default: "."
+  args:
+    description: More arguments for ste-check, for example "--fail-on warning --no-unknown".
+    default: ""
+  dictionary-b64:
+    description: >
+      Your STE dictionary as text (gzip, then Base64). Keep it in a repository secret. To make it, use the
+      command "ste-build-dictionary --lite FILE.pdf -o d.json && gzip -9c d.json | base64".
+    default: ""
+  dictionary-path:
+    description: Path of a dictionary file on the runner.
+    default: ""
+  sarif:
+    description: Path for a SARIF report. If it is empty, there is no SARIF report.
+    default: ""
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Install ste-check
+      shell: bash
+      run: python -m pip install --quiet "${{ github.action_path }}"
+    - name: Get the dictionary
+      shell: bash
+      env:
+        STE_B64: ${{ inputs.dictionary-b64 }}
+        STE_PATH: ${{ inputs.dictionary-path }}
+      run: |
+        if [ -n "$STE_PATH" ]; then
+          echo "STE_DICTIONARY=$STE_PATH" >> "$GITHUB_ENV"
+        elif [ -n "$STE_B64" ]; then
+          mkdir -p "$RUNNER_TEMP/ste"
+          printf '%s' "$STE_B64" | base64 -d | gunzip > "$RUNNER_TEMP/ste/dictionary.json"
+          echo "STE_DICTIONARY=$RUNNER_TEMP/ste/dictionary.json" >> "$GITHUB_ENV"
+        else
+          echo "::error::No STE dictionary. Set the dictionary-b64 or the dictionary-path input."
+          exit 2
+        fi
+    - name: Run ste-check
+      shell: bash
+      env:
+        STE_PATHS: ${{ inputs.paths }}
+        STE_ARGS: ${{ inputs.args }}
+        STE_SARIF: ${{ inputs.sarif }}
+      run: |
+        set +e
+        if [ -n "$STE_SARIF" ]; then
+          ste-check $STE_ARGS --format sarif -o "$STE_SARIF" --fail-on never $STE_PATHS
+        fi
+        ste-check $STE_ARGS $STE_PATHS

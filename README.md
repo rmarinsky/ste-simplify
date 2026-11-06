@@ -1,0 +1,227 @@
+# ste-simplify
+
+Write and check text in Simplified Technical English (STE). Use it for agent instructions, skills, prompts, specs, READMEs, docs and chat replies. It operates in Claude Code, Codex, Cursor, pre-commit, GitHub Actions and a terminal.
+
+STE is a controlled language. It has a dictionary of approved words and a set of writing rules. Each approved word has only one sense. The specification is ASD-STE100 from ASD (AeroSpace, Security and Defence Industries Association of Europe). This project is compatible with ASD-STE100 Issue 9. ASD did not make this project, and ASD does not endorse it.
+
+Words with more than one sense cause errors in instructions for models. A skill that tells a model to "meet the bar" or to "use the house standard" does not give a clear rule. STE removes these words. Scripts find the problems, and the model writes only the sentences that the scripts show.
+
+## The dictionary is not in this repository
+
+ASD has the copyright of the STE dictionary. You can get the specification free of charge from https://www.asd-ste100.org. This repository does not contain the dictionary, the word lists or the example sentences.
+
+You make your local dictionary from your copy of the PDF:
+
+```bash
+ste-build-dictionary ~/Downloads/ASD-STE100_ISSUE9.pdf
+```
+
+The command writes `~/.config/ste-simplify/dictionary.json`. Keep this file on your computer. Do not commit it and do not publish it. The `.gitignore` of this repository ignores `dictionary.json` and `*.pdf`.
+
+For Issue 9, the builder finds 883 approved entries and 1320 entries that are not approved. The specification gives 875 approved words and 1274 words that are not approved. The numbers are different because some words have one entry for each part of speech.
+
+## Install
+
+Python 3.9 or a newer version is necessary. To build the dictionary, `pdftotext` from poppler is also necessary (`brew install poppler` or `apt install poppler-utils`). The scripts have no other dependencies.
+
+```bash
+pipx install git+https://github.com/rmarinsky/ste-simplify
+```
+
+This gives three commands: `ste-check`, `ste-fix` and `ste-build-dictionary`.
+
+You can also run the scripts without an installation:
+
+```bash
+git clone https://github.com/rmarinsky/ste-simplify
+python3 ste-simplify/skills/ste-simplify/scripts/build_dictionary.py ~/Downloads/ASD-STE100_ISSUE9.pdf
+python3 ste-simplify/skills/ste-simplify/scripts/ste_check.py docs/
+```
+
+## Start
+
+```bash
+ste-check README.md docs/          # report
+ste-fix docs/                      # plan: safe replacements and sentences to write again
+ste-fix --apply docs/              # apply only the safe replacements
+printf '%s\n' "$TEXT" | ste-check -    # check text that is not in a file
+```
+
+## Before and after
+
+Before:
+
+```text
+You should always choose the main color from the house palette. Avoid gradients, since they
+often look wrong. In case the user wants a real demo, start recording the screen and check the result.
+```
+
+`ste-check` shows each word that is not approved, the approved alternatives and the STE example from your dictionary (the examples are not shown here):
+
+```text
+before.md  (10 errors, 1 warnings)
+  Words that are not approved:
+    should             x1   lines 1
+      MUST (v): ...
+      IF (conj): ...
+    choose             x1   lines 1
+      SELECT (v): ...
+    main               x1   lines 1
+      PRIMARY (adj): ...
+    Avoid              x1   lines 1
+      PREVENT (v): ...
+      DO NOT: ...
+    often, wrong, case, real, house ...
+  -ing forms (rule 3.5):
+    recording          x1   lines 1
+      approved forms: record, recorded, records
+  Writing rules:
+       1  one-instruction  "and check" starts a second instruction. ...
+```
+
+`ste-fix` applies three safe replacements (`main` to `primary`, `often` to `frequently`, `wrong` to `incorrect`). It gives the other sentences to the model. After the model writes them again, the checker shows no errors:
+
+```text
+Always select the primary color from the palette of the app. Do not use gradients, because they
+frequently look incorrect. If the user wants a demo of the app, record the screen. Then examine the result.
+```
+
+A skill description, before:
+
+```yaml
+description: Use this whenever the user asks for a landing page review ("review my landing"). It's important
+  that you catch anything that would look off against the house standard; flag it and suggest a fix.
+```
+
+After (no errors):
+
+```yaml
+description: Use this skill when the user wants a review of a landing page ("review my landing"). Compare the
+  page with the rules in DESIGN.md. Make a list of each difference. For each difference, give one correction.
+```
+
+The trigger phrase in quotation marks stays the same. The checker does not examine text between quotation marks, because STE tells you to keep that text as it is.
+
+## Checks
+
+| Check | STE rule | Level |
+|---|---|---|
+| Words that are not approved, with alternatives, STE examples and help text | 1.1 | error |
+| Approved words with a different part of speech, for example "Check the file" (CHECK is a noun in STE) | 1.2 | error |
+| Forms that are not approved, for example "using" or "chose" | 1.4, 3.1 | error |
+| The -ing form of a verb | 3.5 | error |
+| Words that are not in the dictionary (possibly technical names) | 1.5, 1.12 | warning |
+| An instruction with more than 20 words | 5.1 | error |
+| A descriptive sentence with more than 25 words | 6.3 | error |
+| A paragraph with more than six sentences | 6.6 | warning |
+| Possible passive voice | 3.6 | warning |
+| Possibly two instructions in one sentence | 5.2 | warning |
+| Contractions | 4.2 | error |
+| Semicolons | 8.1 | error |
+
+The checker counts words as STE tells you. Text in parentheses is one word. A hyphenated word is one word. A number with its unit is one word. The checker also counts a phrase between quotation marks and an inline code span as one word.
+
+The checker does not examine code blocks, inline code, URLs, email addresses, file paths, command flags, HTML tags or front matter keys. In YAML files and in front matter, it examines only the `description` values (change this with `--yaml-keys`). With `--comments`, it also examines comments in source code.
+
+## ste-check options
+
+| Option | Effect |
+|---|---|
+| `--format text\|json\|sarif` | Report format. SARIF is for code scanning in CI. |
+| `-o FILE` | Write the report to a file. |
+| `--fail-on error\|warning\|never` | Exit code 1 when the checker finds problems at this level (default `error`). Exit code 2 is a setup error. |
+| `--allow FILE` | One more allow-list. You can use this option more than one time. |
+| `--no-default-allow` | Do not load the default allow-list for software work. |
+| `--no-unknown` | Do not show words that are not in the dictionary. |
+| `--words-only`, `--rules-only` | Do only the word checks, or only the writing rule checks. |
+| `--check-quotes` | Also examine words between quotation marks. |
+| `--comments` | Also examine comments in source code. |
+| `--dictionary FILE` | Use a different dictionary file. You can also set `STE_DICTIONARY`. |
+| `--max-procedure`, `--max-descriptive`, `--max-paragraph` | Change the limits (20, 25 and 6). |
+| `--summary` | One line for each file. |
+
+## Technical names
+
+STE lets you use technical nouns and technical verbs of your subject field (rules 1.5 and 1.12). The checker has a default allow-list for software, UI and agent work (`skills/ste-simplify/scripts/ste_simplify/data/software.allow`). For your project, put a `.ste-allow.txt` file at the project root, with one name or phrase on each line. The checker finds this file in the folder of the first path or in a parent folder.
+
+To skip a line, put `<!-- ste-ignore -->` on the line before it. To skip a part of a file, put it between `<!-- ste-disable -->` and `<!-- ste-enable -->`.
+
+## ste-fix
+
+`ste-fix` makes a plan. Without `--apply`, it does not change files. With `--apply`, it applies only safe replacements. A replacement is safe when all of these conditions are correct:
+
+- The dictionary gives one alternative for the word.
+- The alternative has the same part of speech.
+- The word is in its base form.
+- The position of the word agrees with its part of speech (for example, a verb after "to" or at the start of an instruction).
+
+`ste-fix` also corrects "a" and "an" before the new word. It lists all other problems, sentence by sentence, with the alternatives and the STE examples. A person or a model must write those sentences again. Use `--format json` to give the list to a model.
+
+## Claude Code
+
+Install the plugin. It contains the `ste-simplify` skill and the `ste-rewriter` agent:
+
+```text
+/plugin marketplace add rmarinsky/ste-simplify
+/plugin install ste-simplify@ste-simplify
+```
+
+Or put a copy of the files in your Claude folder:
+
+```bash
+cp -r skills/ste-simplify ~/.claude/skills/
+cp agents/ste-rewriter.md ~/.claude/agents/
+```
+
+The skill tells the model to run `ste-check` and to apply `ste-fix`. Then the model writes the flagged sentences again and runs the checker again until there are no errors. The agent does the same for skill files and agent files, and it keeps their trigger phrases.
+
+To examine each Markdown file after Claude writes it, add the hook in `adapters/claude-code/settings.example.json` to your settings. The hook runs `ste_hook.py`. When the file has STE errors, the hook gives the report to Claude.
+
+## Codex
+
+Add the section in `adapters/codex/AGENTS.md` to the `AGENTS.md` file of your project, or to `~/.codex/AGENTS.md`. The section tells Codex to run `ste-check` and `ste-fix` after it changes a document. If your Codex version can use skills, you can also put a copy of `skills/ste-simplify` in `~/.codex/skills/`.
+
+## Cursor
+
+Put a copy of `adapters/cursor/ste.mdc` in `.cursor/rules/` in your project. The rule tells the agent to run `ste-check` in the terminal after it changes a Markdown file.
+
+## Chat replies
+
+Send the reply to the checker:
+
+```bash
+pbpaste | ste-check -
+pbpaste | ste-fix --apply - | pbcopy
+```
+
+## pre-commit
+
+Use the example in `adapters/pre-commit-config.example.yaml`. The hook reads the dictionary from `~/.config/ste-simplify/dictionary.json` or from `STE_DICTIONARY`.
+
+## GitHub Actions
+
+The repository is also a GitHub Action. A CI runner does not have your dictionary. Thus, keep a small copy of it in a repository secret. The `--lite` option removes the definitions and the examples. The result is smaller than the size limit of a secret:
+
+```bash
+ste-build-dictionary --lite ~/Downloads/ASD-STE100_ISSUE9.pdf -o ste-lite.json
+gzip -9c ste-lite.json | base64 | gh secret set STE_DICTIONARY_B64
+rm ste-lite.json
+```
+
+Then put a copy of `adapters/github/ste.yml` in `.github/workflows/`. The workflow runs `ste-check` and sends a SARIF report to code scanning.
+
+## Limits
+
+The checker does not know the sense of a sentence. It finds the part of speech only from the word before. It cannot find an approved word with a sense that is not approved, for example "the house standard". The passive voice check and the instruction check can make errors. Thus, read the text after the checker shows no errors.
+
+## Tests
+
+```bash
+cd tests && python3 -m unittest discover -s .
+```
+
+The tests use a small test dictionary (`tests/fixtures/mini-dictionary.json`). It is not from the STE specification. To do the builder test with the PDF from ASD, set `STE_PDF=/path/to/ASD-STE100.pdf`.
+
+## License
+
+The code has the MIT license. The STE dictionary and the ASD-STE100 specification are the property of ASD. ASD-STE100 is a trademark of ASD.

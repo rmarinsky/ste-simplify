@@ -1,0 +1,15 @@
+# The STE dictionary is copyrighted by ASD. Never commit it or the PDF.
+dictionary.json
+*.dictionary.json
+ste-dictionary*.json
+*.pdf
+*.sarif
+
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.venv/
+.pytest_cache/
+.DS_Store
