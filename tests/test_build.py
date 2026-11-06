@@ -176,3 +176,25 @@ class RealPdfTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ItWordsParserTests(unittest.TestCase):
+    PAGE = """<dl>
+<dt id="foo"><span class="icon-dontuse"></span>foolist, foo list <a href="#foo">link</a></dt>
+<dd>Don't use <i>foolist</i>. Instead, use <i>barlist</i>.</dd>
+<dt id="zap"><span class="icon-dontuse"></span>zap <a href="#zap">link</a></dt>
+<dd>Don't use as a verb.</dd>
+<dt id="widget">widget <a href="#widget">link</a></dt>
+<dd>Use widget for a small UI part.</dd>
+<dt id="old"><span class="icon-avoid"></span>stale, the <a href="#old">link</a></dt>
+<dd>Avoid in general usage. Instead, use words like <i>fresh</i> or <i>new</i>.</dd>
+</dl>"""
+
+    def test_parse(self):
+        from ste_simplify import itwords
+        d = itwords.parse(self.PAGE)
+        self.assertEqual(d["avoid"]["foolist"]["alternatives"], ["barlist"])
+        self.assertIn("foo list", d["avoid"])
+        self.assertNotIn("zap", d["avoid"])  # it depends on the context
+        self.assertEqual(d["avoid"]["the stale"]["alternatives"], ["fresh", "new"])
+        self.assertEqual(d["known"], ["widget"])

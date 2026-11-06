@@ -1,0 +1,1768 @@
+{
+ "avoid": {
+  "abort": {
+   "alternatives": [
+    "stop",
+    "exit",
+    "cancel",
+    "end"
+   ],
+   "anchor": "abort",
+   "note": "Avoid in general usage."
+  },
+  "account name": {
+   "alternatives": [
+    "username"
+   ],
+   "anchor": "account-name",
+   "note": "Don't use."
+  },
+  "agnostic": {
+   "alternatives": [
+    "platform-independent"
+   ],
+   "anchor": "agnostic",
+   "note": "Don't use."
+  },
+  "aka": {
+   "alternatives": [
+    "also known as",
+    "or"
+   ],
+   "anchor": "aka",
+   "note": "Don't use."
+  },
+  "allows you to": {
+   "alternatives": [
+    "lets you"
+   ],
+   "anchor": "allows-you-to",
+   "note": "Don't use."
+  },
+  "api console": {
+   "alternatives": [
+    "Google APIs Explorer",
+    "Google Cloud console"
+   ],
+   "anchor": "api-console",
+   "note": "Don't use."
+  },
+  "apis console": {
+   "alternatives": [
+    "Google APIs Explorer",
+    "Google Cloud console"
+   ],
+   "anchor": "api-console",
+   "note": "Don't use."
+  },
+  "authn": {
+   "alternatives": [
+    "authentication",
+    "authorization"
+   ],
+   "anchor": "authn-authz",
+   "note": "Don't use."
+  },
+  "authz": {
+   "alternatives": [
+    "authentication",
+    "authorization"
+   ],
+   "anchor": "authn-authz",
+   "note": "Don't use."
+  },
+  "autoupdate": {
+   "alternatives": [
+    "automatically update"
+   ],
+   "anchor": "autoupdate",
+   "note": "Don't use."
+  },
+  "bar": {
+   "alternatives": [],
+   "anchor": "bar",
+   "note": "Avoid when possible."
+  },
+  "baz": {
+   "alternatives": [],
+   "anchor": "baz",
+   "note": "Avoid when possible."
+  },
+  "black hat": {
+   "alternatives": [
+    "illegal",
+    "unethical"
+   ],
+   "anchor": "blackhat",
+   "note": "Don't use."
+  },
+  "black list": {
+   "alternatives": [],
+   "anchor": "blacklist",
+   "note": "Don't use blacklist, whitelist, and graylist."
+  },
+  "black listed": {
+   "alternatives": [],
+   "anchor": "blacklisted",
+   "note": "Don't use."
+  },
+  "black listing": {
+   "alternatives": [],
+   "anchor": "blacklisting",
+   "note": "Don't use."
+  },
+  "black-hat": {
+   "alternatives": [
+    "illegal",
+    "unethical"
+   ],
+   "anchor": "blackhat",
+   "note": "Don't use."
+  },
+  "black-list": {
+   "alternatives": [],
+   "anchor": "blacklist",
+   "note": "Don't use blacklist, whitelist, and graylist."
+  },
+  "black-listed": {
+   "alternatives": [],
+   "anchor": "blacklisted",
+   "note": "Don't use."
+  },
+  "black-listing": {
+   "alternatives": [],
+   "anchor": "blacklisting",
+   "note": "Don't use."
+  },
+  "blackhat": {
+   "alternatives": [
+    "illegal",
+    "unethical"
+   ],
+   "anchor": "blackhat",
+   "note": "Don't use."
+  },
+  "blackhole": {
+   "alternatives": [
+    "dropped without notification"
+   ],
+   "anchor": "blackhole",
+   "note": "Don't use."
+  },
+  "blackholed": {
+   "alternatives": [
+    "dropped without notification"
+   ],
+   "anchor": "blackhole",
+   "note": "Don't use."
+  },
+  "blacklist": {
+   "alternatives": [
+    "denylist",
+    "excludelist",
+    "blocklist"
+   ],
+   "anchor": "blacklist",
+   "note": "Don't use blacklist, whitelist, and graylist."
+  },
+  "blacklisted": {
+   "alternatives": [],
+   "anchor": "blacklisted",
+   "note": "Don't use."
+  },
+  "blacklisting": {
+   "alternatives": [],
+   "anchor": "blacklisting",
+   "note": "Don't use."
+  },
+  "blast radius": {
+   "alternatives": [
+    "affected area",
+    "spatial impact"
+   ],
+   "anchor": "blast-radius",
+   "note": "Don't use."
+  },
+  "bonkers": {
+   "alternatives": [
+    "complicated",
+    "complex",
+    "baffling",
+    "strange",
+    "unexpected"
+   ],
+   "anchor": "crazy",
+   "note": "Don't use."
+  },
+  "break-glass": {
+   "alternatives": [
+    "emergency access",
+    "manual fallback",
+    "preplanned procedure"
+   ],
+   "anchor": "break-glass",
+   "note": "Don't use."
+  },
+  "brown bag": {
+   "alternatives": [
+    "learning session",
+    "lunch and learn",
+    "lunchtime learning session",
+    "casual training",
+    "informal training"
+   ],
+   "anchor": "brown-bag",
+   "note": "Don't use."
+  },
+  "brown-bag": {
+   "alternatives": [
+    "learning session",
+    "lunch and learn",
+    "lunchtime learning session",
+    "casual training",
+    "informal training"
+   ],
+   "anchor": "brown-bag",
+   "note": "Don't use."
+  },
+  "build cop": {
+   "alternatives": [
+    "build monitor"
+   ],
+   "anchor": "build-cop",
+   "note": "Don't use."
+  },
+  "build sheriff": {
+   "alternatives": [
+    "build monitor"
+   ],
+   "anchor": "build-cop",
+   "note": "Don't use."
+  },
+  "cell phone": {
+   "alternatives": [
+    "mobile phone",
+    "mobile device"
+   ],
+   "anchor": "cell-phone",
+   "note": "Don't use."
+  },
+  "cellphone": {
+   "alternatives": [
+    "mobile phone",
+    "mobile device"
+   ],
+   "anchor": "cell-phone",
+   "note": "Don't use."
+  },
+  "cellular data": {
+   "alternatives": [
+    "mobile data"
+   ],
+   "anchor": "cellular-data",
+   "note": "Don't use."
+  },
+  "cellular network": {
+   "alternatives": [
+    "mobile network"
+   ],
+   "anchor": "cellular-network",
+   "note": "Don't use."
+  },
+  "chubby": {
+   "alternatives": [
+    "unused",
+    "overextended"
+   ],
+   "anchor": "chubby",
+   "note": "Don't use."
+  },
+  "click here": {
+   "alternatives": [],
+   "anchor": "click-here",
+   "note": "Don't use."
+  },
+  "cloud console": {
+   "alternatives": [
+    "Google Cloud console"
+   ],
+   "anchor": "gcp-console",
+   "note": "Don't use."
+  },
+  "comprise": {
+   "alternatives": [
+    "consist of",
+    "contain",
+    "include"
+   ],
+   "anchor": "comprise",
+   "note": "Don't use."
+  },
+  "config": {
+   "alternatives": [
+    "configuration",
+    "configuring"
+   ],
+   "anchor": "config",
+   "note": "Avoid when possible."
+  },
+  "cons": {
+   "alternatives": [
+    "disadvantages"
+   ],
+   "anchor": "cons",
+   "note": "Don't use."
+  },
+  "crazy": {
+   "alternatives": [
+    "complicated",
+    "complex",
+    "baffling",
+    "strange",
+    "unexpected"
+   ],
+   "anchor": "crazy",
+   "note": "Don't use."
+  },
+  "cripple": {
+   "alternatives": [
+    "it crippled the server",
+    "it slowed the server down"
+   ],
+   "anchor": "cripple",
+   "note": "Don't use."
+  },
+  "curated roles": {
+   "alternatives": [
+    "predefined roles"
+   ],
+   "anchor": "curated-roles",
+   "note": "Don't use."
+  },
+  "demilitarized zone": {
+   "alternatives": [
+    "perimeter network"
+   ],
+   "anchor": "dmz",
+   "note": "Don't use."
+  },
+  "denigrate": {
+   "alternatives": [
+    "disparage"
+   ],
+   "anchor": "denigrate",
+   "note": "Don't use."
+  },
+  "desire": {
+   "alternatives": [
+    "want",
+    "need"
+   ],
+   "anchor": "desire",
+   "note": "Don't use."
+  },
+  "desired": {
+   "alternatives": [
+    "want",
+    "need"
+   ],
+   "anchor": "desire",
+   "note": "Don't use."
+  },
+  "dev console": {
+   "alternatives": [
+    "Google APIs Explorer",
+    "Google Cloud console"
+   ],
+   "anchor": "api-console",
+   "note": "Don't use."
+  },
+  "developer console": {
+   "alternatives": [
+    "Google APIs Explorer",
+    "Google Cloud console"
+   ],
+   "anchor": "api-console",
+   "note": "Don't use."
+  },
+  "developers console": {
+   "alternatives": [],
+   "anchor": "developers-console",
+   "note": "Don't use."
+  },
+  "disclosure triangle": {
+   "alternatives": [
+    "expander arrow"
+   ],
+   "anchor": "disclosure-triangle",
+   "note": "Don't use."
+  },
+  "disclosure widget": {
+   "alternatives": [
+    "expander arrow"
+   ],
+   "anchor": "disclosure-triangle",
+   "note": "Don't use."
+  },
+  "dojo": {
+   "alternatives": [
+    "training",
+    "workshop"
+   ],
+   "anchor": "dojo",
+   "note": "Don't use."
+  },
+  "dumb down": {
+   "alternatives": [
+    "simplify",
+    "remove technical jargon"
+   ],
+   "anchor": "dumb-down",
+   "note": "Don't use."
+  },
+  "e.g.": {
+   "alternatives": [
+    "for example",
+    "such as",
+    "i.e."
+   ],
+   "anchor": "eg",
+   "note": "Don't use."
+  },
+  "fat": {
+   "alternatives": [
+    "high-capacity network connection",
+    "fat connection",
+    "full-featured client"
+   ],
+   "anchor": "fat",
+   "note": "Don't use."
+  },
+  "female adapter": {
+   "alternatives": [
+    "socket"
+   ],
+   "anchor": "female-adapter",
+   "note": "Don't use."
+  },
+  "final solution": {
+   "alternatives": [
+    "solution",
+    "definitive",
+    "optimal",
+    "best"
+   ],
+   "anchor": "final-solution",
+   "note": "Don't use."
+  },
+  "first class": {
+   "alternatives": [
+    "higher-order",
+    "anonymous",
+    "nested"
+   ],
+   "anchor": "first-class",
+   "note": "Don't use first class or first-class citizen."
+  },
+  "first-class": {
+   "alternatives": [
+    "higher-order",
+    "anonymous",
+    "nested"
+   ],
+   "anchor": "first-class",
+   "note": "Don't use first class or first-class citizen."
+  },
+  "first-class citizen": {
+   "alternatives": [
+    "higher-order",
+    "anonymous",
+    "nested"
+   ],
+   "anchor": "first-class",
+   "note": "Don't use first class or first-class citizen."
+  },
+  "gender-neutral he": {
+   "alternatives": [
+    "they",
+    "he/she",
+    "(s)he"
+   ],
+   "anchor": "gender",
+   "note": "Don't use."
+  },
+  "ghetto": {
+   "alternatives": [
+    "clumsy",
+    "workaround",
+    "inelegant"
+   ],
+   "anchor": "ghetto",
+   "note": "Don't use."
+  },
+  "gimp": {
+   "alternatives": [],
+   "anchor": "gimp",
+   "note": "Don't use."
+  },
+  "gimpy": {
+   "alternatives": [],
+   "anchor": "gimp",
+   "note": "Don't use."
+  },
+  "google api console": {
+   "alternatives": [],
+   "anchor": "google-api-console",
+   "note": "Don't use."
+  },
+  "google apis console": {
+   "alternatives": [],
+   "anchor": "google-api-console",
+   "note": "Don't use."
+  },
+  "google developers console": {
+   "alternatives": [],
+   "anchor": "google-developers-console",
+   "note": "Don't use."
+  },
+  "grand father clause": {
+   "alternatives": [],
+   "anchor": "grandfather-clause",
+   "note": "Don't use."
+  },
+  "grand-father clause": {
+   "alternatives": [],
+   "anchor": "grandfather-clause",
+   "note": "Don't use."
+  },
+  "grandfather clause": {
+   "alternatives": [],
+   "anchor": "grandfather-clause",
+   "note": "Don't use."
+  },
+  "gray hat": {
+   "alternatives": [],
+   "anchor": "grayhat",
+   "note": "Don't use."
+  },
+  "gray list": {
+   "alternatives": [],
+   "anchor": "graylist",
+   "note": "Don't use."
+  },
+  "gray listed": {
+   "alternatives": [],
+   "anchor": "graylisted",
+   "note": "Don't use."
+  },
+  "gray listing": {
+   "alternatives": [],
+   "anchor": "graylisting",
+   "note": "Don't use."
+  },
+  "gray out": {
+   "alternatives": [
+    "unavailable"
+   ],
+   "anchor": "grayed-out",
+   "note": "Don't use."
+  },
+  "gray-list": {
+   "alternatives": [],
+   "anchor": "graylist",
+   "note": "Don't use."
+  },
+  "gray-listed": {
+   "alternatives": [],
+   "anchor": "graylisted",
+   "note": "Don't use."
+  },
+  "gray-listing": {
+   "alternatives": [],
+   "anchor": "graylisting",
+   "note": "Don't use."
+  },
+  "grayed-out": {
+   "alternatives": [
+    "unavailable"
+   ],
+   "anchor": "grayed-out",
+   "note": "Don't use."
+  },
+  "grayhat": {
+   "alternatives": [],
+   "anchor": "grayhat",
+   "note": "Don't use."
+  },
+  "graylist": {
+   "alternatives": [
+    "provisional list"
+   ],
+   "anchor": "graylist",
+   "note": "Don't use."
+  },
+  "graylisted": {
+   "alternatives": [],
+   "anchor": "graylisted",
+   "note": "Don't use."
+  },
+  "graylisting": {
+   "alternatives": [],
+   "anchor": "graylisting",
+   "note": "Don't use."
+  },
+  "grey hat": {
+   "alternatives": [],
+   "anchor": "grayhat",
+   "note": "Don't use."
+  },
+  "grey list": {
+   "alternatives": [],
+   "anchor": "graylist",
+   "note": "Don't use."
+  },
+  "grey listed": {
+   "alternatives": [],
+   "anchor": "graylisted",
+   "note": "Don't use."
+  },
+  "grey listing": {
+   "alternatives": [],
+   "anchor": "graylisting",
+   "note": "Don't use."
+  },
+  "grey out": {
+   "alternatives": [
+    "unavailable"
+   ],
+   "anchor": "grayed-out",
+   "note": "Don't use."
+  },
+  "grey-list": {
+   "alternatives": [],
+   "anchor": "graylist",
+   "note": "Don't use."
+  },
+  "grey-listed": {
+   "alternatives": [],
+   "anchor": "graylisted",
+   "note": "Don't use."
+  },
+  "grey-listing": {
+   "alternatives": [],
+   "anchor": "graylisting",
+   "note": "Don't use."
+  },
+  "greyed-out": {
+   "alternatives": [
+    "unavailable"
+   ],
+   "anchor": "grayed-out",
+   "note": "Don't use."
+  },
+  "greyhat": {
+   "alternatives": [],
+   "anchor": "grayhat",
+   "note": "Don't use."
+  },
+  "greylist": {
+   "alternatives": [],
+   "anchor": "graylist",
+   "note": "Don't use."
+  },
+  "greylisted": {
+   "alternatives": [],
+   "anchor": "graylisted",
+   "note": "Don't use."
+  },
+  "greylisting": {
+   "alternatives": [],
+   "anchor": "graylisting",
+   "note": "Don't use."
+  },
+  "gypsy": {
+   "alternatives": [],
+   "anchor": "gypsy",
+   "note": "Don't use."
+  },
+  "hamburger": {
+   "alternatives": [],
+   "anchor": "hamburger",
+   "note": "Don't use."
+  },
+  "hamburger menu": {
+   "alternatives": [],
+   "anchor": "hamburger",
+   "note": "Don't use."
+  },
+  "healthy": {
+   "alternatives": [],
+   "anchor": "healthy",
+   "note": "Don't use."
+  },
+  "him": {
+   "alternatives": [
+    "they",
+    "he/she",
+    "(s)he"
+   ],
+   "anchor": "gender",
+   "note": "Don't use."
+  },
+  "house keeping": {
+   "alternatives": [
+    "maintenance",
+    "cleanup"
+   ],
+   "anchor": "housekeeping",
+   "note": "Don't use."
+  },
+  "house-keeping": {
+   "alternatives": [
+    "maintenance",
+    "cleanup"
+   ],
+   "anchor": "housekeeping",
+   "note": "Don't use."
+  },
+  "housekeeping": {
+   "alternatives": [
+    "maintenance",
+    "cleanup"
+   ],
+   "anchor": "housekeeping",
+   "note": "Don't use."
+  },
+  "hover": {
+   "alternatives": [],
+   "anchor": "hover",
+   "note": "Don't use."
+  },
+  "i.e.": {
+   "alternatives": [
+    "that is",
+    "e.g."
+   ],
+   "anchor": "ie",
+   "note": "Don't use."
+  },
+  "insane": {
+   "alternatives": [
+    "complicated",
+    "complex",
+    "baffling",
+    "strange",
+    "unexpected"
+   ],
+   "anchor": "crazy",
+   "note": "Don't use."
+  },
+  "interconnect type": {
+   "alternatives": [
+    "connection type",
+    "dedicated connection"
+   ],
+   "anchor": "interconnect-type",
+   "note": "Don't use."
+  },
+  "just": {
+   "alternatives": [],
+   "anchor": "just",
+   "note": "Avoid."
+  },
+  "k8s": {
+   "alternatives": [
+    "Kubernetes"
+   ],
+   "anchor": "k8s",
+   "note": "Don't use."
+  },
+  "kabob": {
+   "alternatives": [],
+   "anchor": "kebab",
+   "note": "Don't use."
+  },
+  "kabob case": {
+   "alternatives": [
+    "dash-case"
+   ],
+   "anchor": "kebab-case",
+   "note": "Don't use."
+  },
+  "kabob menu": {
+   "alternatives": [],
+   "anchor": "kebab",
+   "note": "Don't use."
+  },
+  "kabob-case": {
+   "alternatives": [
+    "dash-case"
+   ],
+   "anchor": "kebab-case",
+   "note": "Don't use."
+  },
+  "kebab": {
+   "alternatives": [],
+   "anchor": "kebab",
+   "note": "Don't use."
+  },
+  "kebab case": {
+   "alternatives": [
+    "dash-case"
+   ],
+   "anchor": "kebab-case",
+   "note": "Don't use."
+  },
+  "kebab menu": {
+   "alternatives": [],
+   "anchor": "kebab",
+   "note": "Don't use."
+  },
+  "kebab-case": {
+   "alternatives": [
+    "dash-case"
+   ],
+   "anchor": "kebab-case",
+   "note": "Don't use."
+  },
+  "kill": {
+   "alternatives": [
+    "stop",
+    "exit",
+    "cancel",
+    "end"
+   ],
+   "anchor": "kill",
+   "note": "Avoid when possible."
+  },
+  "lame": {
+   "alternatives": [],
+   "anchor": "lame",
+   "note": "Don't use."
+  },
+  "learnings": {
+   "alternatives": [
+    "knowledge"
+   ],
+   "anchor": "learnings",
+   "note": "Don't use."
+  },
+  "left-nav": {
+   "alternatives": [],
+   "anchor": "left-nav",
+   "note": "Don't use directional language."
+  },
+  "loony": {
+   "alternatives": [
+    "complicated",
+    "complex",
+    "baffling",
+    "strange",
+    "unexpected"
+   ],
+   "anchor": "crazy",
+   "note": "Don't use."
+  },
+  "lunatic": {
+   "alternatives": [
+    "complicated",
+    "complex",
+    "baffling",
+    "strange",
+    "unexpected"
+   ],
+   "anchor": "crazy",
+   "note": "Don't use."
+  },
+  "mad": {
+   "alternatives": [
+    "complicated",
+    "complex",
+    "baffling",
+    "strange",
+    "unexpected"
+   ],
+   "anchor": "crazy",
+   "note": "Don't use."
+  },
+  "male adapter": {
+   "alternatives": [
+    "plug"
+   ],
+   "anchor": "male-adapter",
+   "note": "Don't use."
+  },
+  "master": {
+   "alternatives": [
+    "primary",
+    "main",
+    "original",
+    "parent",
+    "initiator",
+    "driver",
+    "controller",
+    "manager",
+    "mixer",
+    "aggregator",
+    "publisher",
+    "leader",
+    "active"
+   ],
+   "anchor": "master",
+   "note": "Use with caution."
+  },
+  "mom test": {
+   "alternatives": [
+    "novice user test"
+   ],
+   "anchor": "mom-test",
+   "note": "Don't use mom test, grandmother test, grandma test, or girlfriend test."
+  },
+  "network ip address": {
+   "alternatives": [
+    "internal IP address"
+   ],
+   "anchor": "network-ip-address",
+   "note": "Don't use."
+  },
+  "noops": {
+   "alternatives": [
+    "fully managed",
+    "no operations",
+    "non-operational"
+   ],
+   "anchor": "noops",
+   "note": "Don't use."
+  },
+  "nuke": {
+   "alternatives": [
+    "remove",
+    "attack",
+    "denial-of-service attack"
+   ],
+   "anchor": "nuke",
+   "note": "Don't use."
+  },
+  "off the reservation": {
+   "alternatives": [],
+   "anchor": "reservation",
+   "note": "Don't use."
+  },
+  "omnibox": {
+   "alternatives": [
+    "address bar"
+   ],
+   "anchor": "omnibox",
+   "note": "Don't use."
+  },
+  "or google api console": {
+   "alternatives": [
+    "Google APIs Explorer",
+    "Google Cloud console"
+   ],
+   "anchor": "api-console",
+   "note": "Don't use."
+  },
+  "or his": {
+   "alternatives": [
+    "they",
+    "he/she",
+    "(s)he"
+   ],
+   "anchor": "gender",
+   "note": "Don't use."
+  },
+  "outpost": {
+   "alternatives": [
+    "channel"
+   ],
+   "anchor": "outpost",
+   "note": "Don't use."
+  },
+  "pets v. cattle": {
+   "alternatives": [
+    "manually configured versus automated"
+   ],
+   "anchor": "pets-versus-cattle",
+   "note": "Don't use."
+  },
+  "pets versus cattle": {
+   "alternatives": [
+    "manually configured versus automated"
+   ],
+   "anchor": "pets-versus-cattle",
+   "note": "Don't use."
+  },
+  "pets vs. cattle": {
+   "alternatives": [
+    "manually configured versus automated"
+   ],
+   "anchor": "pets-versus-cattle",
+   "note": "Don't use."
+  },
+  "pop-up": {
+   "alternatives": [],
+   "anchor": "pop-up",
+   "note": "Don't use."
+  },
+  "popup": {
+   "alternatives": [],
+   "anchor": "pop-up",
+   "note": "Don't use."
+  },
+  "postmortem": {
+   "alternatives": [
+    "retrospective"
+   ],
+   "anchor": "postmortem",
+   "note": "Avoid in general usage."
+  },
+  "preferred pronouns": {
+   "alternatives": [
+    "pronouns"
+   ],
+   "anchor": "preferred-pronouns",
+   "note": "Don't use."
+  },
+  "pros": {
+   "alternatives": [
+    "advantages"
+   ],
+   "anchor": "pros",
+   "note": "Don't use."
+  },
+  "regex": {
+   "alternatives": [
+    "regular expression"
+   ],
+   "anchor": "regex",
+   "note": "Don't use."
+  },
+  "repo": {
+   "alternatives": [
+    "repository"
+   ],
+   "anchor": "repo",
+   "note": "Don't use."
+  },
+  "representational state transfer": {
+   "alternatives": [],
+   "anchor": "rest",
+   "note": "Don't use."
+  },
+  "retarded": {
+   "alternatives": [],
+   "anchor": "retarded",
+   "note": "Don't use."
+  },
+  "right-nav": {
+   "alternatives": [],
+   "anchor": "left-nav",
+   "note": "Don't use directional language."
+  },
+  "rtfm": {
+   "alternatives": [],
+   "anchor": "rtfm",
+   "note": "Don't use."
+  },
+  "sane": {
+   "alternatives": [
+    "valid",
+    "sensible"
+   ],
+   "anchor": "sane",
+   "note": "Don't use."
+  },
+  "sanity check": {
+   "alternatives": [
+    "quick check",
+    "preliminary check",
+    "coherence check"
+   ],
+   "anchor": "sanity-check",
+   "note": "Don't use."
+  },
+  "sexy": {
+   "alternatives": [
+    "fast",
+    "powerful",
+    "elegant"
+   ],
+   "anchor": "sexy",
+   "note": "Don't use."
+  },
+  "should": {
+   "alternatives": [],
+   "anchor": "should",
+   "note": "Generally avoid."
+  },
+  "should be": {
+   "alternatives": [],
+   "anchor": "should",
+   "note": "Generally avoid."
+  },
+  "sign into": {
+   "alternatives": [
+    "sign in to"
+   ],
+   "anchor": "sign-into",
+   "note": "Don't use."
+  },
+  "single pane of glass": {
+   "alternatives": [
+    "single interface",
+    "unified interface"
+   ],
+   "anchor": "single-pane-of-glass",
+   "note": "Avoid."
+  },
+  "slave": {
+   "alternatives": [
+    "worker",
+    "replica"
+   ],
+   "anchor": "slave",
+   "note": "Don't use."
+  },
+  "slice and dice": {
+   "alternatives": [
+    "segment data for analysis"
+   ],
+   "anchor": "slice",
+   "note": "Don't use the phrase slice and dice."
+  },
+  "smart phone": {
+   "alternatives": [
+    "mobile phone",
+    "phone",
+    "mobile"
+   ],
+   "anchor": "smartphone",
+   "note": "Don't use."
+  },
+  "smartphone": {
+   "alternatives": [
+    "mobile phone",
+    "phone",
+    "mobile"
+   ],
+   "anchor": "smartphone",
+   "note": "Don't use."
+  },
+  "ssh'ing": {
+   "alternatives": [],
+   "anchor": "sshing",
+   "note": "Don't use."
+  },
+  "tarball": {
+   "alternatives": [
+    "tar file"
+   ],
+   "anchor": "tarball",
+   "note": "Don't use."
+  },
+  "text box": {
+   "alternatives": [
+    "box"
+   ],
+   "anchor": "textbox",
+   "note": "Don't use."
+  },
+  "textbox": {
+   "alternatives": [
+    "box"
+   ],
+   "anchor": "textbox",
+   "note": "Don't use."
+  },
+  "tribal knowledge": {
+   "alternatives": [],
+   "anchor": "tribal-knowledge",
+   "note": "Don't use."
+  },
+  "tribal wisdom": {
+   "alternatives": [],
+   "anchor": "tribal-knowledge",
+   "note": "Don't use."
+  },
+  "unarchive": {
+   "alternatives": [
+    "extract"
+   ],
+   "anchor": "unarchive",
+   "note": "Don't use."
+  },
+  "uncompress": {
+   "alternatives": [
+    "extract"
+   ],
+   "anchor": "uncompress",
+   "note": "Don't use."
+  },
+  "unselect": {
+   "alternatives": [
+    "clear",
+    "deselect"
+   ],
+   "anchor": "unselect",
+   "note": "Don't use."
+  },
+  "unsighted": {
+   "alternatives": [],
+   "anchor": "unsighted",
+   "note": "Don't use."
+  },
+  "untar": {
+   "alternatives": [
+    "extract"
+   ],
+   "anchor": "untar",
+   "note": "Don't use."
+  },
+  "unzip": {
+   "alternatives": [
+    "extract"
+   ],
+   "anchor": "unzip",
+   "note": "Don't use."
+  },
+  "via": {
+   "alternatives": [],
+   "anchor": "via",
+   "note": "Don't use."
+  },
+  "vice versa": {
+   "alternatives": [],
+   "anchor": "vice-versa",
+   "note": "Don't use."
+  },
+  "voila": {
+   "alternatives": [],
+   "anchor": "voila",
+   "note": "Don't use."
+  },
+  "voodoo": {
+   "alternatives": [
+    "mysterious",
+    "complicated",
+    "nondeterministic"
+   ],
+   "anchor": "voodoo",
+   "note": "Don't use."
+  },
+  "vs.": {
+   "alternatives": [],
+   "anchor": "vs",
+   "note": "Don't use vs."
+  },
+  "war room": {
+   "alternatives": [
+    "situation response team",
+    "situation room",
+    "incident-management team",
+    "media monitoring room"
+   ],
+   "anchor": "war-room",
+   "note": "Don't use."
+  },
+  "war-room": {
+   "alternatives": [
+    "situation response team",
+    "situation room",
+    "incident-management team",
+    "media monitoring room"
+   ],
+   "anchor": "war-room",
+   "note": "Don't use."
+  },
+  "warroom": {
+   "alternatives": [
+    "situation response team",
+    "situation room",
+    "incident-management team",
+    "media monitoring room"
+   ],
+   "anchor": "war-room",
+   "note": "Don't use."
+  },
+  "web master": {
+   "alternatives": [
+    "website owner",
+    "website administrator",
+    "owner of a site"
+   ],
+   "anchor": "webmaster",
+   "note": "Don't use."
+  },
+  "webmaster": {
+   "alternatives": [
+    "website owner",
+    "website administrator",
+    "owner of a site"
+   ],
+   "anchor": "webmaster",
+   "note": "Don't use."
+  },
+  "white hat": {
+   "alternatives": [
+    "legal",
+    "ethical",
+    "following the rules"
+   ],
+   "anchor": "whitehat",
+   "note": "Don't use."
+  },
+  "white label": {
+   "alternatives": [
+    "unbranded",
+    "unlabeled",
+    "blank label"
+   ],
+   "anchor": "white-label",
+   "note": "Don't use."
+  },
+  "white list": {
+   "alternatives": [],
+   "anchor": "whitelist",
+   "note": "Don't use."
+  },
+  "white listed": {
+   "alternatives": [],
+   "anchor": "whitelisted",
+   "note": "Don't use."
+  },
+  "white listing": {
+   "alternatives": [],
+   "anchor": "whitelisting",
+   "note": "Don't use."
+  },
+  "white-hat": {
+   "alternatives": [
+    "legal",
+    "ethical",
+    "following the rules"
+   ],
+   "anchor": "whitehat",
+   "note": "Don't use."
+  },
+  "white-label": {
+   "alternatives": [
+    "unbranded",
+    "unlabeled",
+    "blank label"
+   ],
+   "anchor": "white-label",
+   "note": "Don't use."
+  },
+  "white-list": {
+   "alternatives": [],
+   "anchor": "whitelist",
+   "note": "Don't use."
+  },
+  "white-listed": {
+   "alternatives": [],
+   "anchor": "whitelisted",
+   "note": "Don't use."
+  },
+  "white-listing": {
+   "alternatives": [],
+   "anchor": "whitelisting",
+   "note": "Don't use."
+  },
+  "whitehat": {
+   "alternatives": [
+    "legal",
+    "ethical",
+    "following the rules"
+   ],
+   "anchor": "whitehat",
+   "note": "Don't use."
+  },
+  "whitelabel": {
+   "alternatives": [
+    "unbranded",
+    "unlabeled",
+    "blank label"
+   ],
+   "anchor": "white-label",
+   "note": "Don't use."
+  },
+  "whitelist": {
+   "alternatives": [
+    "allowlist",
+    "trustlist",
+    "safelist"
+   ],
+   "anchor": "whitelist",
+   "note": "Don't use."
+  },
+  "whitelisted": {
+   "alternatives": [],
+   "anchor": "whitelisted",
+   "note": "Don't use."
+  },
+  "whitelisting": {
+   "alternatives": [],
+   "anchor": "whitelisting",
+   "note": "Don't use."
+  },
+  "will": {
+   "alternatives": [],
+   "anchor": "will",
+   "note": "Avoid."
+  },
+  "wish": {
+   "alternatives": [
+    "want",
+    "need"
+   ],
+   "anchor": "wish",
+   "note": "Don't use."
+  },
+  "world wide web": {
+   "alternatives": [
+    "web"
+   ],
+   "anchor": "world-wide-web",
+   "note": "Don't use."
+  },
+  "ymmv": {
+   "alternatives": [
+    "Your results might vary"
+   ],
+   "anchor": "ymmv",
+   "note": "Don't use."
+  }
+ },
+ "changes": "Only the term names, the 'Don't use' entries with their alternatives, and the first sentence of their guidance. Extracted by ste_simplify/itwords.py.",
+ "known": [
+  "a/b testing",
+  "access token",
+  "ad hoc",
+  "ad tech",
+  "address bar",
+  "advertised route priority",
+  "ai",
+  "all apps screen",
+  "alpha",
+  "am",
+  "among",
+  "and other keyboard commands",
+  "android",
+  "android-powered device",
+  "api",
+  "api console key",
+  "api key",
+  "apis explorer",
+  "app",
+  "app bar",
+  "appendix",
+  "application",
+  "as",
+  "auto mode vpc network",
+  "autohealing",
+  "autopopulate",
+  "autoscaling",
+  "autotagging",
+  "backend",
+  "bare metal",
+  "base64",
+  "beta",
+  "big-endian",
+  "blue-green",
+  "boolean",
+  "branding information",
+  "button",
+  "can",
+  "chapter",
+  "checkbox",
+  "choose",
+  "clear",
+  "click",
+  "click through",
+  "clickthrough",
+  "client",
+  "client id",
+  "client secret",
+  "cloud sdk",
+  "codebase",
+  "codelab",
+  "cold",
+  "colocate",
+  "confidential",
+  "cpu",
+  "cross-site request forgery",
+  "curl",
+  "custom mode vpc network",
+  "dash",
+  "data",
+  "data center",
+  "data center campus",
+  "data cleaning",
+  "data source",
+  "data type",
+  "datastore",
+  "dead letter",
+  "dead-letter queue",
+  "deep linking",
+  "deprecate",
+  "devops",
+  "dialog",
+  "directory",
+  "distributed denial-of-service",
+  "dns server policy",
+  "dnskey",
+  "documentation set",
+  "domain name registrar",
+  "domain name system security extensions",
+  "double-tap",
+  "drag",
+  "each",
+  "earlier",
+  "ecommerce",
+  "egress",
+  "either",
+  "element",
+  "email",
+  "emoji",
+  "enable",
+  "endpoint",
+  "enter",
+  "error-prone",
+  "execute",
+  "expander arrow",
+  "external vpn gateway",
+  "extract",
+  "fail over",
+  "failover",
+  "fast healthcare interoperability resources",
+  "file system",
+  "filename",
+  "fintech",
+  "folder",
+  "following",
+  "for example",
+  "frontend",
+  "gbps",
+  "gcloud cli",
+  "generative ai",
+  "gke node",
+  "google account",
+  "google accounts",
+  "google api client library for language",
+  "google cloud",
+  "google cloud console",
+  "google cloud project id",
+  "google i/o",
+  "google play services",
+  "google play services sdk",
+  "gsutil",
+  "hardcode",
+  "hardcoded",
+  "healthcare",
+  "high availability",
+  "high performance computing",
+  "high-availability",
+  "hold the pointer over",
+  "home screen",
+  "hostname",
+  "hot",
+  "hotspot",
+  "https",
+  "i/o",
+  "iaas",
+  "iam",
+  "id",
+  "if",
+  "image",
+  "index",
+  "ingest",
+  "ingress",
+  "inline",
+  "instance group",
+  "intercluster",
+  "interconnect connection",
+  "interconnect connection location",
+  "interconnectattachment",
+  "interface",
+  "internal dns",
+  "internationalized domain name",
+  "internet",
+  "internet key exchange",
+  "iot",
+  "ipsec",
+  "kbps",
+  "key pair",
+  "key ring",
+  "key-value pair",
+  "later",
+  "legacy",
+  "lifecycle",
+  "like",
+  "limits",
+  "lint",
+  "little-endian",
+  "livestream",
+  "load balancing",
+  "load-balancing",
+  "lock screen",
+  "log in",
+  "login",
+  "long-running operation",
+  "managed instance group",
+  "markdown",
+  "material design",
+  "matrix",
+  "may",
+  "mbps",
+  "media type",
+  "metafeed",
+  "metageneration",
+  "method",
+  "metropolitan area",
+  "microservices",
+  "might",
+  "mobile data",
+  "mobile device",
+  "mobile network",
+  "mobile phone",
+  "multi-cluster",
+  "multi-region",
+  "multi-regional",
+  "multi-service",
+  "multi-tenancy",
+  "must",
+  "n/a",
+  "name server",
+  "namespace",
+  "neither",
+  "non-key",
+  "nosql",
+  "notification drawer",
+  "oauth 2.0",
+  "on-premises",
+  "once",
+  "os",
+  "paas",
+  "page",
+  "parameter",
+  "peering zone",
+  "per",
+  "persistent disk",
+  "personally identifiable information",
+  "plain text",
+  "plug in",
+  "plug-in",
+  "plugin",
+  "pm",
+  "point to",
+  "pojo",
+  "pop",
+  "populate",
+  "port",
+  "postgresql",
+  "pre-existing",
+  "pre-shared key",
+  "prebuilt",
+  "precapture",
+  "preemptible",
+  "prerecorded",
+  "press",
+  "presubmit",
+  "project",
+  "quota",
+  "read-only",
+  "recents screen",
+  "rehost",
+  "resource record set",
+  "review",
+  "rfc",
+  "run time",
+  "runbook",
+  "runtime",
+  "saas",
+  "sap",
+  "screenshot",
+  "scroll",
+  "search",
+  "search console",
+  "see",
+  "select",
+  "sensitive",
+  "service",
+  "service level agreement",
+  "service level indicator",
+  "service level objective",
+  "set up",
+  "setup",
+  "sha-1",
+  "sign in",
+  "sign out",
+  "sign-in",
+  "sign-out",
+  "since",
+  "single most",
+  "single sign-on",
+  "sql",
+  "start up",
+  "startup",
+  "status bar",
+  "style sheet",
+  "sub-command",
+  "subnet",
+  "subtree",
+  "subzone",
+  "such as",
+  "tab",
+  "table name",
+  "tablet",
+  "tag",
+  "tap",
+  "their",
+  "then",
+  "they",
+  "third party",
+  "third-party",
+  "time out",
+  "time to live",
+  "time zone",
+  "time-zone",
+  "timeframe",
+  "timeout",
+  "timestamp",
+  "toolkit",
+  "touchscreen",
+  "transpile",
+  "trojan",
+  "tutorial",
+  "typically",
+  "unicode",
+  "unix epoch time",
+  "unix-like",
+  "us",
+  "user",
+  "user base",
+  "using",
+  "utf",
+  "v",
+  "virtual machine instance",
+  "wake lock",
+  "wake-lock",
+  "walkthrough",
+  "warm",
+  "wasm",
+  "web",
+  "web application firewall",
+  "web server",
+  "webassembly",
+  "whether",
+  "whitepaper",
+  "whitespace",
+  "wildcard",
+  "workload",
+  "you"
+ ],
+ "license": "CC BY 4.0, https://creativecommons.org/licenses/by/4.0/",
+ "source": "https://developers.google.com/style/word-list",
+ "title": "Word list, Google developer documentation style guide"
+}

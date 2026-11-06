@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ste-simplify"
-version = "0.4.2"
+version = "0.5.0"
 description = "Check and fix text for Simplified Technical English (STE). Builds the dictionary from your own copy of the standard."
 readme = "README.md"
 license = { text = "MIT" }
@@ -30,4 +30,4 @@ package-dir = { "" = "skills/ste-simplify/scripts" }
 packages = ["ste_simplify"]
 
 [tool.setuptools.package-data]
-ste_simplify = ["data/*.allow"]
+ste_simplify = ["data/*.allow", "data/*.json"]

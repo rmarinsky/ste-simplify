@@ -39,6 +39,7 @@ Do not write a word list. Do not get word lists from the web. The dictionary is 
    The plan has two parts:
    - Safe replacements, with numbers. A safe replacement has one approved alternative with the same part of speech.
    - Sentences to write again, with the problem words, the approved alternatives and an STE example for each alternative.
+   - IT words (warnings): software words that you must not use, with their alternatives. They come from the IT word list.
 
 2. Show the plan to the user:
    - Run `ste fix --html FILE`. This opens a full report in the browser of the user. In the report, the user can remove the safe replacements that are not correct and select words for the allow-list.

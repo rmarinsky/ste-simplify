@@ -34,6 +34,14 @@ class PlanTests(unittest.TestCase):
         p = self.plan("Use the main-tool file.")[0]
         self.assertIsNone(p["replacement"])
 
+    def test_it_word_with_one_alternative_is_safe(self):
+        it = ({"allows you to": {"alternatives": ["lets you"], "note": "", "anchor": ""},
+               "abort": {"alternatives": ["stop", "exit"], "note": "", "anchor": ""}}, set())
+        fs = check("The tool allows you to stop. Abort the tool.", it_words=it)
+        plan = {p["key"]: p for p in fix.plan_for(mini_dictionary(), [("t.md", fs)])}
+        self.assertEqual(plan["allows you to"]["replacement"], "lets you")
+        self.assertIsNone(plan["abort"]["replacement"])
+
     def test_inflected_form_is_not_safe(self):
         p = self.plan("You utilized the tool.")[0]
         self.assertIsNone(p["replacement"])

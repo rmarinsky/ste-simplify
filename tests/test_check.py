@@ -173,3 +173,32 @@ class DispatcherTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ItWordTests(unittest.TestCase):
+    IT = ({"whitelist": {"alternatives": ["allowlist"], "note": "Don't use.", "anchor": "whitelist"},
+           "abort": {"alternatives": ["stop", "exit"], "note": "Avoid.", "anchor": "abort"},
+           "allows you to": {"alternatives": ["lets you"], "note": "Don't use.", "anchor": "allows-you-to"},
+           "utilize": {"alternatives": ["use"], "note": "Don't use.", "anchor": "utilize"}},
+          {"kubernetes", "gizmo"})
+
+    def test_it_word_and_phrase(self):
+        fs = check("Add the IP to the whitelist. The tool allows you to stop.", it_words=self.IT)
+        it = {f.key: f for f in fs if f.rule == "it-word"}
+        self.assertEqual(set(it), {"whitelist", "allows you to"})
+        self.assertEqual(it["whitelist"].severity, "warning")
+
+    def test_ste_is_first(self):
+        fs = check("You utilize the tool.", it_words=self.IT)
+        self.assertEqual([f.rule for f in fs if f.word == "utilize"], ["not-approved"])
+        alts = [a["text"] for g in fs[0].data["alternatives"] for a in g["alternatives"]]
+        self.assertIn("use", alts)
+
+    def test_known_it_terms_are_not_unknown(self):
+        self.assertNotIn("unknown-word", rules(check("Use the gizmo.", it_words=self.IT)))
+
+    def test_shipped_list_loads(self):
+        avoid, known = check_mod.load_it_words()
+        self.assertIn("whitelist", avoid)
+        self.assertIn("allowlist", avoid["whitelist"]["alternatives"])
+        self.assertGreater(len(known), 100)

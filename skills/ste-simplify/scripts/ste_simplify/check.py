@@ -20,6 +20,14 @@ from .textscan import CODE_CHAR, CELL_CHAR, iter_files, scan_text
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_ALLOW = os.path.join(HERE, "data", "software.allow")
+IT_WORDS = os.path.join(HERE, "data", "it-words.json")
+
+
+def load_it_words(path=IT_WORDS):
+    """The IT word list (CC BY 4.0, Google developer documentation style guide)."""
+    with open(path, encoding="utf-8") as f:
+        d = json.load(f)
+    return d["avoid"], set(d["known"])
 
 RULES = {
     "not-approved": ("error", "1.1", "The word is not approved. Use an approved alternative."),
@@ -34,6 +42,7 @@ RULES = {
     "one-instruction": ("warning", "5.2", "Possibly more than one instruction in the sentence."),
     "semicolon": ("error", "8.1", "Do not use a semicolon. Write two sentences."),
     "contraction": ("error", "4.2", "Do not use contractions."),
+    "it-word": ("warning", "IT", "Avoid this word in IT text (Google developer documentation word list)."),
 }
 SEVERITY_ORDER = {"error": 2, "warning": 1, "never": 3}
 
@@ -200,6 +209,8 @@ class Checker:
         self.words_on = o.get("words", True)
         self.rules_on = o.get("rules", True)
         self.unknown_on = o.get("unknown", True)
+        self.it_avoid, self.it_known = o.get("it_words") or ({}, set())
+        self.it_phrases = {tuple(k.split()): k for k in self.it_avoid if " " in k}
 
     # --- word level ---
 
@@ -337,7 +348,8 @@ class Checker:
             w = low[i]
             # multi-word technical names and dictionary phrases (longest first, no punctuation between)
             hit = None
-            for L in range(min(max(self.max_allow_phrase, self.d.max_phrase), n - i), 1, -1):
+            longest = max(self.max_allow_phrase, self.d.max_phrase, max(map(len, self.it_phrases), default=1))
+            for L in range(min(longest, n - i), 1, -1):
                 seg = b.text[toks[i][0]:toks[i + L - 1][0] + len(toks[i + L - 1][1])]
                 if re.search(r"[^\w\s'’-]", seg):
                     continue
@@ -349,7 +361,13 @@ class Checker:
                 if ph:
                     hit = (ph[0], L, ph[1])
                     break
+                if key in self.it_phrases:
+                    hit = ("it", L, self.it_phrases[key])
+                    break
             if hit:
+                if hit[0] == "it":
+                    ln, col = b.at(start)
+                    out.append(self.it_finding(path, ln, col, " ".join(t for _, t in toks[i:i + hit[1]]), hit[2], clean))
                 if hit[0] == "na":
                     ln, col = b.at(start)
                     out.append(self.na_finding(path, ln, col, " ".join(t for _, t in toks[i:i + hit[1]]),
@@ -399,6 +417,8 @@ class Checker:
         first = self.sentence_start(b, start)
         if tok[0].isupper() and not first:
             return None  # a name in the middle of a sentence, for example "GitHub Actions"
+        if w in self.it_avoid and not self.d.is_approved_form(w) and not self.d.lookup_not_approved(w):
+            return self.it_finding(path, ln, col, tok, w, clean)  # STE is first: only words that STE does not decide
         if self.d.is_approved_form(w):
             if w in self.d.na_pos:
                 guess = self.guess_pos(low, i, first, proc)
@@ -416,6 +436,10 @@ class Checker:
             key, entries, kind = na
             f = self.na_finding(path, ln, col, tok, key, entries, kind, clean)
             f.data["pos_guess"] = self.guess_pos(low, i, first, proc)
+            it = self.it_avoid.get(w) or self.it_avoid.get(key)
+            if it and it.get("alternatives"):  # also show the IT alternatives, for example "slave": worker, replica
+                f.data["alternatives"].append({"for_pos": "IT", "ste_example": "", "non_ste_example": "",
+                                               "alternatives": [{"text": x, "pos": "IT"} for x in it["alternatives"]]})
             return f
         if self.d.prefix_re is not None and w.startswith("re") and len(w) > 4:
             rest = w[2:].lstrip("-")
@@ -439,6 +463,8 @@ class Checker:
                                f"{', '.join(forms)}.", word=tok, key=bw, sentence=clean, data={"forms": forms})
         if not self.unknown_on:
             return None
+        if w in self.it_known or any(c in self.it_known for c, _, _ in candidates(w)):
+            return None  # a known IT term (Google developer documentation word list)
         if w.endswith("ing") and w not in NOT_ING and len(w) > 5:
             return Finding(path, ln, col + 1, "ing-form",
                            f"\"{tok}\" looks like the -ing form of a verb. If it is not a technical name, "
@@ -446,6 +472,14 @@ class Checker:
         return Finding(path, ln, col + 1, "unknown-word",
                        f"\"{tok}\" is not in the dictionary. Use an approved word, or add it to the "
                        "allow-list if it is a technical name or technical verb.", word=tok, key=w, sentence=clean)
+
+    def it_finding(self, path, ln, col, tok, key, clean):
+        e = self.it_avoid[key]
+        alts = e.get("alternatives", [])
+        msg = f"\"{tok}\": avoid in IT text." + (f" Use: {', '.join(alts)}." if alts else " Write it in a different way.")
+        data = {"alternatives": [{"alternatives": [{"text": a, "pos": None} for a in alts], "ste_example": ""}] if alts else [],
+                "help": [e.get("note", "")], "source": "https://developers.google.com/style/word-list#" + e.get("anchor", "")}
+        return Finding(path, ln, col + 1, "it-word", msg, word=tok, key=key, sentence=clean, data=data)
 
     def sentence_start(self, b, start):
         before = re.split(r"[.!?:\u2063]\s", b.text[:start])[-1]
@@ -534,7 +568,7 @@ def apply_ignores(text):
 def group_words(findings):
     groups = collections.OrderedDict()
     for f in findings:
-        if f.rule in ("not-approved", "wrong-pos", "wrong-form", "ing-form", "unknown-word"):
+        if f.rule in ("not-approved", "wrong-pos", "wrong-form", "ing-form", "it-word", "unknown-word"):
             k = (f.rule, f.key or (f.word or "").lower())
             groups.setdefault(k, []).append(f)
     return groups
@@ -574,7 +608,8 @@ def report_text(results, out, examples=1, show_unknown=True, summary_only=False)
             continue
         out.write(f"\n{path}  ({sev['error']} errors, {sev['warning']} warnings)\n")
         titles = [("not-approved", "Words that are not approved"), ("wrong-pos", "Approved words used as a different part of speech"),
-                  ("wrong-form", "Forms that are not approved"), ("ing-form", "-ing forms (rule 3.5)")]
+                  ("wrong-form", "Forms that are not approved"), ("ing-form", "-ing forms (rule 3.5)"),
+                  ("it-word", "IT words to avoid (Google developer documentation word list)")]
         for rule, title in titles:
             items = [(k, g) for k, g in groups.items() if k[0] == rule]
             if not items:
@@ -583,7 +618,7 @@ def report_text(results, out, examples=1, show_unknown=True, summary_only=False)
             out.write(f"  {title}:\n")
             for (r, key), g in items:
                 out.write(f"    {g[0].word if len(g) == 1 else key:<18} x{len(g):<3} lines {lines_list(g)}\n")
-                if rule in ("not-approved", "wrong-pos"):
+                if rule in ("not-approved", "wrong-pos", "it-word"):
                     for l in fmt_alts(g[0].data, examples):
                         out.write(l + "\n")
                 elif g[0].data and g[0].data.get("forms"):
@@ -594,7 +629,8 @@ def report_text(results, out, examples=1, show_unknown=True, summary_only=False)
             out.write("  Not in the dictionary (use an approved word, or allow-list a technical name):\n")
             row = "    " + ", ".join(f"{k[1]} x{len(g)}" if len(g) > 1 else k[1] for k, g in unk)
             out.write(wrap(row, 100, "    ") + "\n")
-        other = [f for f in fs if f.rule not in ("not-approved", "wrong-pos", "wrong-form", "ing-form", "unknown-word")]
+        other = [f for f in fs if f.rule not in ("not-approved", "wrong-pos", "wrong-form", "ing-form", "it-word",
+                                                 "unknown-word")]
         if other:
             out.write("  Writing rules:\n")
             for f in sorted(other, key=lambda f: (f.line, f.col)):
@@ -673,6 +709,7 @@ def add_common_args(ap):
     ap.add_argument("--yaml-keys", default="description", help="YAML keys to check (comma list)")
     ap.add_argument("--ext", default=".md", help="file type for stdin (default .md)")
     ap.add_argument("--check-quotes", action="store_true", help="also check words in double quotes")
+    ap.add_argument("--no-it", action="store_true", help="do not use the IT word list (Google developer style guide)")
     ap.add_argument("--max-procedure", type=int, default=20)
     ap.add_argument("--max-descriptive", type=int, default=25)
     ap.add_argument("--max-paragraph", type=int, default=6)
@@ -692,6 +729,9 @@ def make_checker(a):
         "unknown": not getattr(a, "no_unknown", False)})
     c.comments = a.comments
     c.skip_quotes = not a.check_quotes
+    if not a.no_it:
+        c.it_avoid, c.it_known = load_it_words()
+        c.it_phrases = {tuple(k.split()): k for k in c.it_avoid if " " in k}
     c.yaml_keys = tuple(k.strip() for k in a.yaml_keys.split(",") if k.strip())
     return c
 

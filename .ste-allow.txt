@@ -23,3 +23,4 @@ copyright notice
 permission
 language
 languages
+developer documentation style guide

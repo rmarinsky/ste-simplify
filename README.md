@@ -204,6 +204,16 @@ The checker does not examine code blocks, inline code, URLs, email addresses, fi
 | `--max-procedure`, `--max-descriptive`, `--max-paragraph` | Change the limits (20, 25 and 6). |
 | `--summary` | One line for each file. |
 
+## IT words
+
+STE does not have a dictionary for software. Thus, the checker also uses the word list of the Google developer documentation style guide:
+
+- `it-word` (warning): a word that the list tells you not to use in IT text, with its alternatives. For example, `whitelist → allowlist, trustlist, safelist` and `allows you to → lets you`.
+- The checker knows the other words of the list as IT words. It does not show them as "Not in the dictionary".
+- STE is first. If STE has a word, the checker uses the STE decision. If the IT list also has alternatives for it, the report shows them with "(IT)".
+
+To stop these checks, use `--no-it`. The file is `skills/ste-simplify/scripts/ste_simplify/data/it-words.json`. To make it again from the web page, run `python3 -m ste_simplify.itwords`.
+
 ## Technical names
 
 STE lets you use technical nouns and technical verbs of your subject field (rules 1.5 and 1.12). The checker has a default allow-list for software, UI and agent work (`skills/ste-simplify/scripts/ste_simplify/data/software.allow`). For your project, put a `.ste-allow.txt` file at the project root, with one name or phrase on each line. The checker finds this file in the folder of the first path or in a parent folder.
@@ -290,3 +300,5 @@ The tests use a small test dictionary (`tests/fixtures/mini-dictionary.json`). I
 ## License
 
 The code has the MIT license. The STE dictionary and the ASD-STE100 specification are the property of ASD. ASD-STE100 is a trademark of ASD.
+
+`data/it-words.json` comes from the [word list of the Google developer documentation style guide](https://developers.google.com/style/word-list), which has the [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) license. Changes: the file keeps only the names of the words and the alternatives. It also keeps the first sentence of the text for each word.

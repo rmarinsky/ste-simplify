@@ -21,7 +21,7 @@ from .check import add_common_args, make_checker, run, short
 from . import report
 from .dictionary import MissingDictionary, find_path
 
-WORD_RULES = ("not-approved", "wrong-pos", "wrong-form", "ing-form", "unknown-word")
+WORD_RULES = ("not-approved", "wrong-pos", "wrong-form", "ing-form", "it-word", "unknown-word")
 
 
 def same_pos(src, alt):
@@ -30,6 +30,13 @@ def same_pos(src, alt):
 
 def safe_replacement(dic, f):
     """Return (replacement, None) or (None, reason)."""
+    if f.rule == "it-word":
+        alts = [a["text"] for g in (f.data or {}).get("alternatives", []) for a in g["alternatives"]]
+        if len(alts) != 1:
+            return None, "more than one alternative" if alts else "no alternative"
+        if (f.word or "").lower() != f.key or (f.data or {}).get("compound"):
+            return None, "the word is an inflected form"
+        return alts[0], None
     if f.rule != "not-approved":
         return None, "rewrite"
     entries = dic.not_approved.get(f.key or "", [])

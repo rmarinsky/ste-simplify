@@ -23,12 +23,12 @@ def cache_dir():
     return os.path.join(base, "ste-simplify")
 
 
-WORD_RULES = ("not-approved", "wrong-pos", "wrong-form", "ing-form")
+WORD_RULES = ("not-approved", "wrong-pos", "wrong-form", "ing-form", "it-word")
 RULE_NAMES = {
     "not-approved": "Not approved", "wrong-pos": "Part of speech", "wrong-form": "Form",
     "ing-form": "-ing form", "sentence-length": "Sentence length", "paragraph-length": "Paragraph length",
     "passive-voice": "Passive voice", "one-instruction": "One instruction", "semicolon": "Semicolon",
-    "contraction": "Contraction",
+    "contraction": "Contraction", "it-word": "IT word",
 }
 
 
@@ -101,7 +101,7 @@ def short(f):
             tips.append(f"{', '.join(names) or 'Rewrite'}: {g['ste_example']}")
     tips += d.get("help", [])
     w = f.word or ""
-    if f.rule in ("not-approved", "wrong-pos"):
+    if f.rule in ("not-approved", "wrong-pos", "it-word"):
         label = f"{w} \u2192 {', '.join(alts[:3])}" if alts else f"{w}: rewrite"
     elif f.rule == "wrong-form":
         label = f"{w} \u2192 {', '.join(d.get('forms', [])[:4])}"
