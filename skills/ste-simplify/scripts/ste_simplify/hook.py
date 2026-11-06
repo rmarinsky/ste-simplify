@@ -19,10 +19,10 @@ import io
 import json
 import os
 import sys
-import tempfile
 
 from . import check
 from .dictionary import MissingDictionary
+from .report import cache_dir
 
 INSTRUCTION_FILES = "SKILL.md,AGENTS.md,CLAUDE.md,*.mdc,*/agents/*.md,*/commands/*.md"
 MAX_REPORTS = 3
@@ -56,19 +56,20 @@ def changed_lines(event, text):
 
 def count_report(key, clean):
     """Count the reports for this key. The result is True at the limit."""
-    d = os.path.join(tempfile.gettempdir(), "ste-hook")
+    d = os.path.join(cache_dir(), "hook")  # a folder of the user, not the shared /tmp
     f = os.path.join(d, hashlib.sha1(key.encode()).hexdigest())
     if clean:
         if os.path.exists(f):
             os.remove(f)
         return False
-    os.makedirs(d, exist_ok=True)
+    os.makedirs(d, mode=0o700, exist_ok=True)
     try:
         with open(f) as fh:
             n = int(fh.read() or 0)
     except (OSError, ValueError):
         n = 0
-    with open(f, "w") as fh:
+    fd = os.open(f, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0), 0o600)
+    with os.fdopen(fd, "w") as fh:
         fh.write(str(n + 1))
     return n >= MAX_REPORTS
 
