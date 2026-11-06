@@ -32,6 +32,8 @@ array
 arrays
 article
 articles
+artifact
+artifacts
 audit
 avatar
 backend
@@ -82,6 +84,8 @@ comment
 comments
 commit
 commits
+companies
+company
 compile
 compiler
 component
@@ -307,6 +311,8 @@ online
 opacity
 option
 options
+organization
+organizations
 origin
 output
 outputs
@@ -353,6 +359,7 @@ pre-commit
 preposition
 prepositions
 press
+private
 product
 project
 projects
@@ -363,6 +370,7 @@ pronouns
 prototype
 prototypes
 proxy
+public
 publish
 pull
 px
@@ -423,6 +431,8 @@ settings
 setup
 shadow
 shadows
+share
+shared
 sheet
 sheets
 shell
@@ -490,6 +500,8 @@ text
 theme
 themes
 thread
+ticket
+tickets
 timeout
 timestamp
 toast
@@ -512,6 +524,8 @@ truncate
 typescript
 ui
 undo
+upload
+uploads
 url
 urls
 usb
@@ -532,6 +546,8 @@ viewport
 warning
 warnings
 web
+web service
+web services
 web site
 web sites
 website

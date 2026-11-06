@@ -3,7 +3,7 @@
 # Build it one time: ste prepare
 repos:
   - repo: https://github.com/rmarinsky/ste-simplify
-    rev: v0.3.0
+    rev: v0.3.1
     hooks:
       - id: ste-check
         args: [--no-unknown]

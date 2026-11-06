@@ -8,7 +8,7 @@ a run of CODE_CHAR, which counts as one word and is never checked.
 import os
 import re
 
-CODE_CHAR = "\u00a7"  # the section sign
+CODE_CHAR = "\ue000"  # a private-use character: it cannot occur in normal text
 CELL_CHAR = "\u00a6"  # broken bar: a table cell border, read as a sentence boundary
 
 PROSE_EXT = {".md", ".markdown", ".mdx", ".mdc", ".txt", ".text", ".rst", ".yaml", ".yml"}
@@ -47,8 +47,8 @@ def code_mark(m):
 
 
 URL = re.compile(r"\b(?:https?|ftp|file|mailto|ssh|git)://[^\s)>\]]+|\bwww\.[^\s)>\]]+|<[^>\s]+@[^>\s]+>|\b[\w.+-]+@[\w-]+\.[\w.]+\b")
-PATHISH = re.compile(r"(?<![\w§])(?:~|\.{1,2})?(?:[\w.@%+-]*[/\\][\w.@%+*{}$<>-]*)+|"
-                     r"(?<![\w§])[\w-]+\.(?:md|mdx|py|js|ts|tsx|jsx|json|ya?ml|toml|txt|sh|css|html?|swift|go|rs|"
+PATHISH = re.compile(r"(?<![\w\ue000])(?:~|\.{1,2})?(?:[\w.@%+-]*[/\\][\w.@%+*{}$<>-]*)+|"
+                     r"(?<![\w\ue000])[\w-]+\.(?:md|mdx|py|js|ts|tsx|jsx|json|ya?ml|toml|txt|sh|css|html?|swift|go|rs|"
                      r"rb|java|kt|lock|cfg|ini|env|sql|csv|pdf|png|jpe?g|svg|gif|mp4|mdc|xml|log|zip)\b|"
                      r"(?<![\w-])--?[a-zA-Z][\w-]*|\$\{?[A-Za-z_]\w*\}?|\b\w+\(\)|\b[A-Za-z_]\w*_\w+\b|"
                      r"\b[a-z]+[A-Z]\w*\b|\b\w+(?:\.\w+){2,}\b")

@@ -1,6 +1,6 @@
 # Copy this file to .github/workflows/ste.yml.
 # The action runs "ste prepare" on the runner: it downloads the PDF from the ASD web site and makes
-# the dictionary there. The dictionary stays in the runner cache. Do not commit it.
+# the dictionary for this run only. Do not commit the dictionary and do not upload it as an artifact.
 name: STE scan
 on:
   pull_request:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: rmarinsky/ste-simplify@v0.3.0
+      - uses: rmarinsky/ste-simplify@v0.3.1
         with:
           paths: "docs README.md"
           args: "--no-unknown"

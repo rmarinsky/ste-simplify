@@ -21,12 +21,13 @@ def main(argv=None):
         print(f"ste {__version__}")
         return 0
     cmd, rest = argv[0], argv[1:]
-    if cmd == "prepare":
-        return build.main(rest)
-    if cmd == "scan":
-        return check.main(rest)
-    if cmd == "fix":
-        return fix.main(rest)
+    run = {"prepare": build.main, "scan": check.main, "fix": fix.main}.get(cmd)
+    if run:
+        try:
+            return run(rest)
+        except BrokenPipeError:  # for example "ste scan . | head"
+            sys.stderr.close()
+            return 0
     print(f"Unknown command: {cmd}\n\n{__doc__.strip()}", file=sys.stderr)
     return 2
 

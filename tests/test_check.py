@@ -55,6 +55,11 @@ class WordTests(unittest.TestCase):
         lines = sorted({f.line for f in fs if f.rule in ("not-approved", "wrong-pos")})
         self.assertEqual(lines, [3, 8])  # front matter description and the prose line; not code, URL or path
 
+    def test_section_sign_in_text_is_kept(self):
+        f = [f for f in check("Read section \u00a70 and `x`, then you should stop.") if f.word == "should"][0]
+        self.assertIn("\u00a70", f.sentence)
+        self.assertIn("`...`", f.sentence)
+
     def test_ignore_comments(self):
         text = "<!-- ste-ignore -->\nYou should stop.\nYou should stop.\n"
         self.assertEqual([f.line for f in check(text) if f.word == "should"], [3])

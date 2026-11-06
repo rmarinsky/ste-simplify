@@ -17,3 +17,7 @@ writing rule
 writing rules
 action
 actions
+legal
+legal advice
+copyright notice
+permission

@@ -357,6 +357,14 @@ class Checker:
                 i += hit[1]
                 continue
             parts = [(start, tok)]
+            if w.startswith("re-") and self.d.prefix_re is not None and not self.allowed(w):
+                ln, col = b.at(start)  # "re-run": the prefix re- is not approved
+                out.append(Finding(path, ln, col + 1, "not-approved",
+                                   f"\"{tok}\": do not use the prefix re-. Use the approved word with AGAIN or BACK.",
+                                   word=tok, key="re-", sentence=clean,
+                                   data={"help": self.d.prefix_re.get("help", []), "alternatives": []}))
+                i += 1
+                continue
             if "-" in tok and not (self.allowed(w) or self.d.is_approved_form(w) or w in self.d.not_approved):
                 parts, off = [], start
                 for p in tok.split("-"):

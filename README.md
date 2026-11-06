@@ -6,9 +6,16 @@ STE is a controlled language. It has a dictionary of approved words and a set of
 
 Words with more than one sense cause errors in instructions for models. A skill that tells a model to "meet the bar" or to "use the house standard" does not give a clear rule. STE removes these words. Scripts find the problems, and the model writes only the sentences that the scripts show.
 
-## The dictionary is not in this repository
+## Legal use of the dictionary
 
-ASD has the copyright of the STE dictionary. This repository does not contain the PDF, the dictionary, the word lists or the example sentences. It contains only the link to the PDF on the ASD web site.
+ASD has the copyright of ASD-STE100 and its dictionary. You must have written permission from ASD to make a copy of the document or a part of it. You must also have it to publish the document. ASD does not give this permission to persons or companies. Thus, this project obeys these rules:
+
+- This repository does not contain a part of the standard. It does not contain the PDF, the dictionary, word lists or example sentences. It contains only code and the public link to the PDF on the ASD web site.
+- `ste prepare` gets the PDF directly from the ASD web site, on your computer. The PDF stays in a temporary folder. After the command changes the PDF into the dictionary, it deletes the PDF.
+- Only you can use the dictionary. It stays on your computer: `~/.config/ste-simplify/dictionary.json.gz` (JSON with no spaces, in a gzip file of approximately 160 KB).
+- Do not commit, publish, upload or share the dictionary or a part of it. For example, do not put it in a public repository, a package, a web service or a CI artifact.
+- In CI, the runner makes a dictionary with `ste prepare` for each run. The runner deletes it at the end of the run.
+- Do not use the name ASD-STE100 for your tool. Do not tell users that your tool has the approval of ASD.
 
 Make your local dictionary one time:
 
@@ -16,9 +23,9 @@ Make your local dictionary one time:
 ste prepare
 ```
 
-The command downloads the PDF from the ASD web site (https://www.asd-ste100.org/assets/files/ASD-STE100_ISSUE9.pdf) to a temporary folder. It changes the PDF into the dictionary, and then it deletes the PDF. The dictionary is one small file on your computer: `~/.config/ste-simplify/dictionary.json.gz` (JSON with no spaces, in a gzip file of approximately 160 KB). If the download does not operate, request a free copy on https://www.asd-ste100.org/STE_downloads.html. Then run `ste prepare --pdf /path/to/ASD-STE100.pdf`.
+If the download does not operate, request a free copy on https://www.asd-ste100.org/STE_downloads.html. Then run `ste prepare --pdf /path/to/ASD-STE100.pdf`. The `.gitignore` of this repository ignores the dictionary files and `*.pdf`.
 
-Keep the dictionary on your computer. Do not commit it and do not publish it. The `.gitignore` of this repository ignores the dictionary files and `*.pdf`.
+This text is not legal advice. Read the copyright notice on the first pages of the PDF.
 
 For Issue 9, the command finds 883 approved entries and 1320 entries that are not approved. The specification gives 875 approved words and 1274 words that are not approved. The numbers are different because some words have one entry for each part of speech.
 
@@ -52,6 +59,52 @@ printf '%s\n' "$TEXT" | ste scan -       # examine text that is not in a file
 ```
 
 The procedure has a review step. `ste fix` does not change files. A person reads the plan and rejects the replacements that are not correct. The person also adds project words to the allow-list. Then `ste fix --apply` writes only the approved replacements. The model writes the other flagged sentences again, and `ste scan` makes sure that the result is correct.
+
+## Use it in your project
+
+1. Install the command one time:
+
+   ```bash
+   pipx install git+https://github.com/rmarinsky/ste-simplify
+   ```
+
+2. Make your local dictionary one time. The folder is not important:
+
+   ```bash
+   ste prepare
+   ```
+
+3. Go to your project. Examine the instruction files:
+
+   ```bash
+   cd ~/my-project
+   ste scan --summary .claude .cursor AGENTS.md docs
+   ste scan .claude/skills/my-skill/SKILL.md
+   ```
+
+   With `--summary`, the command gives one line for each file. Without `--summary`, it gives the full report.
+
+4. Add the names of your project to `.ste-allow.txt` at the project root, one name on each line. Use the list "Not in the dictionary" in the report to find them. For example, add the names of your products, your systems and your ticket tools.
+
+5. Make the plan for one file:
+
+   ```bash
+   ste fix .claude/skills/my-skill/SKILL.md
+   ```
+
+   Read the safe replacements. Write down the numbers of the replacements that are not correct.
+
+6. Apply the other safe replacements:
+
+   ```bash
+   ste fix --apply --skip 2,5 .claude/skills/my-skill/SKILL.md
+   ```
+
+7. Write the sentences in the list "Sentences to write again" again. You can tell a model to do this with the `ste-simplify` skill.
+
+8. Run `ste scan` again. Do steps 5 to 8 again until there are no errors.
+
+For a large folder, start with the files that the models read most frequently. For example, start with `AGENTS.md`, `CLAUDE.md`, the rules and the skill descriptions.
 
 ## Before and after
 
@@ -184,7 +237,7 @@ Use the example in `adapters/pre-commit-config.example.yaml`. The hook reads the
 
 ## GitHub Actions
 
-The repository is also a GitHub Action. Put a copy of `adapters/github/ste.yml` in `.github/workflows/`. On the runner, the action runs `ste prepare`. This command downloads the PDF from ASD and makes the dictionary. The runner cache keeps the dictionary for the next runs. The workflow runs `ste scan` and sends a SARIF report to code scanning.
+The repository is also a GitHub Action. Put a copy of `adapters/github/ste.yml` in `.github/workflows/`. On the runner, the action runs `ste prepare`. This command downloads the PDF from ASD and makes the dictionary for this run only. The workflow runs `ste scan` and sends a SARIF report to code scanning.
 
 If the runner cannot get the PDF, give the dictionary in a repository secret. The `--lite` option removes the definitions and the examples. The result is smaller than the size limit of a secret:
 
