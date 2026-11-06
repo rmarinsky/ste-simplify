@@ -1,5 +1,5 @@
 ---
-description: Write docs, prompts and agent instructions in Simplified Technical English (STE). Examine them with ste-check.
+description: Write docs, prompts and agent instructions in Simplified Technical English (STE). Examine them with the ste script.
 globs: **/*.md, **/*.mdx, **/*.mdc, **/*.rst, **/*.txt
 alwaysApply: false
 ---
@@ -8,17 +8,13 @@ alwaysApply: false
 
 Write the text in these files in Simplified Technical English (STE).
 
-After you change a file, run the checker in the terminal:
+After you change a file, do these steps in the terminal. If `ste` is not installed, use the command `python3 <path to ste-simplify>/skills/ste-simplify/scripts/ste.py`.
 
-```bash
-ste-check path/to/file.md
-```
-
-If `ste-check` is not installed, run `python3 <path to ste-simplify>/skills/ste-simplify/scripts/ste_check.py path/to/file.md`.
-
-1. Run `ste-fix --apply path/to/file.md` to apply the safe word replacements.
-2. Run `ste-fix --format json path/to/file.md`. Write each sentence in the `rewrite` list again with the approved alternatives and the STE examples.
-3. Run `ste-check` again. Do steps 2 and 3 again until the checker shows no errors.
+1. Run `ste plan path/to/file.md`.
+2. Show the plan to the user. Show the safe replacements with their numbers, and a new sentence for each sentence in the list. Wait for the answer of the user.
+3. Run `ste apply --skip <numbers that the user did not approve> path/to/file.md`.
+4. Write the approved sentences into the file.
+5. Run `ste check path/to/file.md`. If the check shows errors, do steps 1 to 5 again for these errors.
 
 Rules:
 
@@ -28,4 +24,4 @@ Rules:
 - Use the active voice.
 - Do not use -ing verb forms, contractions or semicolons.
 
-Do not change code blocks, inline code, commands, paths, URLs, numbers or names. Keep text between quotation marks that users type. If the checker shows "No STE dictionary found", tell the user to run `ste-build-dictionary /path/to/ASD-STE100.pdf`.
+Do not change code blocks, inline code, commands, paths, URLs, numbers or names. Keep text between quotation marks that users type. If the script shows "No STE dictionary found", tell the user to run `ste build-dictionary /path/to/ASD-STE100.pdf`.

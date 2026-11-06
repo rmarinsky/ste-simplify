@@ -1,19 +1,19 @@
 name: STE check
-description: Check docs and instructions for Simplified Technical English (STE) with ste-check.
+description: Check docs and instructions for Simplified Technical English (STE) with ste check.
 branding:
   icon: check-square
   color: blue
 inputs:
   paths:
-    description: Files or folders that ste-check examines. Put a space between two paths.
+    description: Files or folders that ste check examines. Put a space between two paths.
     default: "."
   args:
-    description: More arguments for ste-check, for example "--fail-on warning --no-unknown".
+    description: More arguments for ste check, for example "--fail-on warning --no-unknown".
     default: ""
   dictionary-b64:
     description: >
       Your STE dictionary as text (gzip, then Base64). Keep it in a repository secret. To make it, use the
-      command "ste-build-dictionary --lite FILE.pdf -o d.json && gzip -9c d.json | base64".
+      command "ste build-dictionary --lite FILE.pdf -o d.json && gzip -9c d.json | base64".
     default: ""
   dictionary-path:
     description: Path of a dictionary file on the runner.
@@ -27,7 +27,7 @@ runs:
     - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
-    - name: Install ste-check
+    - name: Install ste
       shell: bash
       run: python -m pip install --quiet "${{ github.action_path }}"
     - name: Get the dictionary
@@ -46,7 +46,7 @@ runs:
           echo "::error::No STE dictionary. Set the dictionary-b64 or the dictionary-path input."
           exit 2
         fi
-    - name: Run ste-check
+    - name: Run ste check
       shell: bash
       env:
         STE_PATHS: ${{ inputs.paths }}
@@ -55,6 +55,6 @@ runs:
       run: |
         set +e
         if [ -n "$STE_SARIF" ]; then
-          ste-check $STE_ARGS --format sarif -o "$STE_SARIF" --fail-on never $STE_PATHS
+          ste check $STE_ARGS --format sarif -o "$STE_SARIF" --fail-on never $STE_PATHS
         fi
-        ste-check $STE_ARGS $STE_PATHS
+        ste check $STE_ARGS $STE_PATHS

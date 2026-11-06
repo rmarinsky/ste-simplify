@@ -1,14 +1,15 @@
-"""ste-fix: make a replacement plan, and apply only the safe one-to-one replacements.
+"""ste plan / ste apply: a replacement plan, and the safe one-to-one replacements.
 
 A replacement is safe when the dictionary gives exactly one alternative, with
 the same part of speech, for a word in its base form. All other findings go
-into a list of sentences that a person or a model must rewrite.
+into a list of sentences that a person or a model must write again.
 
 Usage examples:
-  ste-fix docs/                 show the plan, change nothing
-  ste-fix --apply docs/         apply the safe replacements, show the rest
-  ste-fix --format json SKILL.md
-  cat reply.md | ste-fix --apply -    print the fixed text
+  ste plan docs/                      show the numbered plan, change nothing
+  ste apply docs/                     apply all safe replacements
+  ste apply --skip 2,5 docs/          keep items 2 and 5 of the plan as they are
+  ste plan --format json SKILL.md     the plan for a model
+  cat reply.md | ste apply -          print the fixed text
 """
 import argparse
 import collections
@@ -45,6 +46,8 @@ def safe_replacement(dic, f):
         return None, "the alternative is a different part of speech"
     if (f.word or "").lower() != f.key:
         return None, "the word is an inflected form"
+    if (f.data or {}).get("compound"):
+        return None, "the word is a part of a hyphenated word"
     guess = (f.data or {}).get("pos_guess")
     pos = e["pos"]
     # The position of the word must agree with the part of speech of the entry.
@@ -76,6 +79,13 @@ def plan_for(dic, results):
             plan.append({"path": path, "line": f.line, "col": f.col, "word": f.word, "key": f.key,
                          "rule": f.rule, "replacement": match_case(f.word, rep) if rep else None,
                          "reason": why, "sentence": f.sentence, "message": f.message, "data": f.data})
+    n = 0
+    for it in plan:
+        if it["replacement"]:
+            n += 1
+            it["id"] = n
+        else:
+            it["id"] = None
     return plan
 
 
@@ -137,14 +147,31 @@ def alt_lines(data):
     return lines
 
 
-def main(argv=None):
-    ap = argparse.ArgumentParser(prog="ste-fix", description="Plan and apply safe STE word replacements.",
-                                 epilog=__doc__.split("\n\n", 2)[2], formatter_class=argparse.RawDescriptionHelpFormatter)
+def ids(spec):
+    out = set()
+    for part in (spec or "").split(","):
+        part = part.strip()
+        if "-" in part:
+            lo, hi = part.split("-", 1)
+            out.update(range(int(lo), int(hi) + 1))
+        elif part:
+            out.add(int(part))
+    return out
+
+
+def main(argv=None, apply=False, prog="ste plan"):
+    ap = argparse.ArgumentParser(prog=prog, description=(
+        "Apply the safe replacements of the plan." if apply else
+        "Show the plan: safe replacements (numbered) and sentences to write again. Changes nothing."),
+        epilog=__doc__.split("\n\n", 2)[2], formatter_class=argparse.RawDescriptionHelpFormatter)
     add_common_args(ap)
-    ap.add_argument("--apply", action="store_true", help="write the safe replacements to the files")
+    if apply:
+        ap.add_argument("--skip", metavar="N,N", help="numbers from the plan to leave as they are, for example 2,5-7")
+        ap.add_argument("--only", metavar="N,N", help="apply only these numbers from the plan")
     ap.add_argument("--format", choices=("text", "json"), default="text")
     ap.add_argument("--no-unknown", action="store_true", help="leave out words that are not in the dictionary")
     a = ap.parse_args(argv)
+    a.apply = apply
     stdin_text = None
     if "-" in a.paths:
         stdin_text = sys.stdin.read()
@@ -159,9 +186,10 @@ def main(argv=None):
     applied = []
     fixed_stdin = None
     if a.apply:
+        skip, only = ids(a.skip), ids(a.only)
         per_file = collections.defaultdict(list)
         for it in plan:
-            if it["replacement"]:
+            if it["replacement"] and it["id"] not in skip and (not only or it["id"] in only):
                 per_file[it["path"]].append(it)
         for path, items in per_file.items():
             if path == "-":
@@ -203,9 +231,10 @@ def main(argv=None):
         for p in sorted(applied, key=lambda p: (p["path"], p["line"])):
             out.write(f"  {p['path']}:{p['line']}  {p['word']} -> {p['replacement']}\n")
     elif safe:
-        out.write(f"Safe replacements ({len(safe)}). Run again with --apply to write them:\n")
+        out.write(f"Safe replacements ({len(safe)}). To write them, run `ste apply` "
+                  "(use --skip N,N for the ones to keep):\n")
         for p in safe:
-            out.write(f"  {p['path']}:{p['line']}:{p['col']}  {p['word']} -> {p['replacement']}\n")
+            out.write(f"  [{p['id']}] {p['path']}:{p['line']}:{p['col']}  {p['word']} -> {p['replacement']}\n")
     else:
         out.write("No safe replacements.\n")
     if rewrite:
@@ -235,4 +264,4 @@ class _Reader:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(apply="--apply" in sys.argv))

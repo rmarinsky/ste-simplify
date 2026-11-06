@@ -2,7 +2,7 @@
 """Build a local STE dictionary (JSON) from your own copy of the official PDF.
 
 Usage:
-  ste-build-dictionary PDF [-o OUT.json] [--lite]
+  ste build-dictionary PDF [-o OUT.json] [--lite]
 
 The script reads word positions with `pdftotext -bbox` (poppler) and splits
 each dictionary page into its four columns. It writes one JSON file with all
@@ -326,7 +326,7 @@ def lite(entry):
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap = argparse.ArgumentParser(prog="ste build-dictionary", description=__doc__.split("\n")[0])
     ap.add_argument("pdf")
     ap.add_argument("-o", "--out", default=default_out())
     ap.add_argument("--lite", action="store_true",

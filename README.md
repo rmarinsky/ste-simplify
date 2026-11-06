@@ -13,7 +13,7 @@ ASD has the copyright of the STE dictionary. You can get the specification free 
 You make your local dictionary from your copy of the PDF:
 
 ```bash
-ste-build-dictionary ~/Downloads/ASD-STE100_ISSUE9.pdf
+ste build-dictionary ~/Downloads/ASD-STE100_ISSUE9.pdf
 ```
 
 The command writes `~/.config/ste-simplify/dictionary.json`. Keep this file on your computer. Do not commit it and do not publish it. The `.gitignore` of this repository ignores `dictionary.json` and `*.pdf`.
@@ -28,24 +28,26 @@ Python 3.9 or a newer version is necessary. To build the dictionary, `pdftotext`
 pipx install git+https://github.com/rmarinsky/ste-simplify
 ```
 
-This gives three commands: `ste-check`, `ste-fix` and `ste-build-dictionary`.
+This gives one command, `ste`, with four parts: `check`, `plan`, `apply` and `build-dictionary`.
 
 You can also run the scripts without an installation:
 
 ```bash
 git clone https://github.com/rmarinsky/ste-simplify
-python3 ste-simplify/skills/ste-simplify/scripts/build_dictionary.py ~/Downloads/ASD-STE100_ISSUE9.pdf
-python3 ste-simplify/skills/ste-simplify/scripts/ste_check.py docs/
+python3 ste-simplify/skills/ste-simplify/scripts/ste.py build-dictionary ~/Downloads/ASD-STE100_ISSUE9.pdf
+python3 ste-simplify/skills/ste-simplify/scripts/ste.py check docs/
 ```
 
 ## Start
 
 ```bash
-ste-check README.md docs/          # report
-ste-fix docs/                      # plan: safe replacements and sentences to write again
-ste-fix --apply docs/              # apply only the safe replacements
-printf '%s\n' "$TEXT" | ste-check -    # check text that is not in a file
+ste check README.md docs/          # report (exit code 1 when there are errors)
+ste plan docs/                     # numbered safe replacements and sentences to write again
+ste apply --skip 2,5 docs/         # apply the safe replacements, but not numbers 2 and 5
+printf '%s\n' "$TEXT" | ste check -   # check text that is not in a file
 ```
+
+The procedure has a review step. `ste plan` does not change files. A person reads the plan and rejects the replacements that are not correct. The person also adds project words to the allow-list. Then `ste apply` writes only the approved replacements. The model writes the other flagged sentences again, and `ste check` makes sure that the result is correct.
 
 ## Before and after
 
@@ -56,7 +58,7 @@ You should always choose the main color from the house palette. Avoid gradients,
 often look wrong. In case the user wants a real demo, start recording the screen and check the result.
 ```
 
-`ste-check` shows each word that is not approved, the approved alternatives and the STE example from your dictionary (the examples are not shown here):
+`ste check` shows each word that is not approved, the approved alternatives and the STE example from your dictionary (the examples are not shown here):
 
 ```text
 before.md  (10 errors, 1 warnings)
@@ -79,7 +81,7 @@ before.md  (10 errors, 1 warnings)
        1  one-instruction  "and check" starts a second instruction. ...
 ```
 
-`ste-fix` applies three safe replacements (`main` to `primary`, `often` to `frequently`, `wrong` to `incorrect`). It gives the other sentences to the model. After the model writes them again, the checker shows no errors:
+`ste apply` applies three safe replacements (`main` to `primary`, `often` to `frequently`, `wrong` to `incorrect`). It gives the other sentences to the model. After the model writes them again, the checker shows no errors:
 
 ```text
 Always select the primary color from the palette of the app. Do not use gradients, because they
@@ -123,7 +125,7 @@ The checker counts words as STE tells you. Text in parentheses is one word. A hy
 
 The checker does not examine code blocks, inline code, URLs, email addresses, file paths, command flags, HTML tags or front matter keys. In YAML files and in front matter, it examines only the `description` values (change this with `--yaml-keys`). With `--comments`, it also examines comments in source code.
 
-## ste-check options
+## ste check options
 
 | Option | Effect |
 |---|---|
@@ -146,20 +148,20 @@ STE lets you use technical nouns and technical verbs of your subject field (rule
 
 To skip a line, put `<!-- ste-ignore -->` on the line before it. To skip a part of a file, put it between `<!-- ste-disable -->` and `<!-- ste-enable -->`.
 
-## ste-fix
+## ste plan and ste apply
 
-`ste-fix` makes a plan. Without `--apply`, it does not change files. With `--apply`, it applies only safe replacements. A replacement is safe when all of these conditions are correct:
+`ste plan` makes a plan and does not change files. `ste apply` applies only safe replacements. Use `--skip N,N` to keep some of them as they are, or `--only N,N` to apply only some of them. The numbers come from `ste plan`. They stay the same while the files do not change. A replacement is safe when all of these conditions are correct:
 
 - The dictionary gives one alternative for the word.
 - The alternative has the same part of speech.
 - The word is in its base form.
 - The position of the word agrees with its part of speech (for example, a verb after "to" or at the start of an instruction).
 
-`ste-fix` also corrects "a" and "an" before the new word. It lists all other problems, sentence by sentence, with the alternatives and the STE examples. A person or a model must write those sentences again. Use `--format json` to give the list to a model.
+`ste apply` also corrects "a" and "an" before the new word. It lists all other problems, sentence by sentence, with the alternatives and the STE examples. A person or a model must write those sentences again. Use `--format json` to give the list to a model.
 
 ## Claude Code
 
-Install the plugin. It contains the `ste-simplify` skill and the `ste-rewriter` agent:
+Install the plugin. It contains the `ste-simplify` skill and the script:
 
 ```text
 /plugin marketplace add rmarinsky/ste-simplify
@@ -170,28 +172,27 @@ Or put a copy of the files in your Claude folder:
 
 ```bash
 cp -r skills/ste-simplify ~/.claude/skills/
-cp agents/ste-rewriter.md ~/.claude/agents/
 ```
 
-The skill tells the model to run `ste-check` and to apply `ste-fix`. Then the model writes the flagged sentences again and runs the checker again until there are no errors. The agent does the same for skill files and agent files, and it keeps their trigger phrases.
+The skill tells the model to run `ste plan` and to show the plan to you. After you give your approval, the model runs `ste apply`, writes the flagged sentences again and runs `ste check` until there are no errors. For skill files and agent files, the skill keeps the trigger phrases and the front matter keys.
 
 To examine each Markdown file after Claude writes it, add the hook in `adapters/claude-code/settings.example.json` to your settings. The hook runs `ste_hook.py`. When the file has STE errors, the hook gives the report to Claude.
 
 ## Codex
 
-Add the section in `adapters/codex/AGENTS.md` to the `AGENTS.md` file of your project, or to `~/.codex/AGENTS.md`. The section tells Codex to run `ste-check` and `ste-fix` after it changes a document. If your Codex version can use skills, you can also put a copy of `skills/ste-simplify` in `~/.codex/skills/`.
+Add the section in `adapters/codex/AGENTS.md` to the `AGENTS.md` file of your project, or to `~/.codex/AGENTS.md`. The section tells Codex to run `ste plan`, `ste apply` and `ste check` after it changes a document. If your Codex version can use skills, you can also put a copy of `skills/ste-simplify` in `~/.codex/skills/`.
 
 ## Cursor
 
-Put a copy of `adapters/cursor/ste.mdc` in `.cursor/rules/` in your project. The rule tells the agent to run `ste-check` in the terminal after it changes a Markdown file.
+Put a copy of `adapters/cursor/ste.mdc` in `.cursor/rules/` in your project. The rule tells the agent to run `ste plan`, `ste apply` and `ste check` in the terminal after it changes a Markdown file.
 
 ## Chat replies
 
 Send the reply to the checker:
 
 ```bash
-pbpaste | ste-check -
-pbpaste | ste-fix --apply - | pbcopy
+pbpaste | ste check -
+pbpaste | ste apply - | pbcopy
 ```
 
 ## pre-commit
@@ -203,12 +204,12 @@ Use the example in `adapters/pre-commit-config.example.yaml`. The hook reads the
 The repository is also a GitHub Action. A CI runner does not have your dictionary. Thus, keep a small copy of it in a repository secret. The `--lite` option removes the definitions and the examples. The result is smaller than the size limit of a secret:
 
 ```bash
-ste-build-dictionary --lite ~/Downloads/ASD-STE100_ISSUE9.pdf -o ste-lite.json
+ste build-dictionary --lite ~/Downloads/ASD-STE100_ISSUE9.pdf -o ste-lite.json
 gzip -9c ste-lite.json | base64 | gh secret set STE_DICTIONARY_B64
 rm ste-lite.json
 ```
 
-Then put a copy of `adapters/github/ste.yml` in `.github/workflows/`. The workflow runs `ste-check` and sends a SARIF report to code scanning.
+Then put a copy of `adapters/github/ste.yml` in `.github/workflows/`. The workflow runs `ste check` and sends a SARIF report to code scanning.
 
 ## Limits
 

@@ -1,9 +1,9 @@
-"""ste-check: find words and sentences that do not obey Simplified Technical English (STE).
+"""ste check: find words and sentences that do not obey Simplified Technical English (STE).
 
 Usage examples:
-  ste-check README.md docs/
-  ste-check --format sarif -o ste.sarif .
-  echo "You should utilize the tool." | ste-check -
+  ste check README.md docs/
+  ste check --format sarif -o ste.sarif .
+  echo "You should utilize the tool." | ste check -
 
 Exit codes: 0 no findings at the --fail-on level, 1 findings, 2 setup error.
 """
@@ -365,6 +365,8 @@ class Checker:
             for pstart, ptok in parts:
                 f = self.check_word(path, b, pstart, ptok, i, low, proc, clean)
                 if f:
+                    if len(parts) > 1 and f.data is not None:
+                        f.data["compound"] = True  # a part of a hyphenated word: never a safe replacement
                     out.append(f)
             i += 1
         return out
@@ -620,7 +622,7 @@ def report_json(results, out):
         files.append({"path": path, "errors": sev["error"], "warnings": sev["warning"],
                       "findings": [f.as_dict() for f in fs]})
     tot = collections.Counter(f.severity for _, fs in results for f in fs)
-    json.dump({"tool": "ste-check", "version": __version__, "files": files,
+    json.dump({"tool": "ste", "version": __version__, "files": files,
                "summary": {"files": len(results), "errors": tot["error"], "warnings": tot["warning"]}},
               out, indent=1, ensure_ascii=False)
     out.write("\n")
@@ -640,7 +642,7 @@ def report_sarif(results, out):
                         "locations": [{"physicalLocation": {"artifactLocation": {"uri": uri},
                                                             "region": {"startLine": f.line, "startColumn": max(f.col, 1)}}}]})
     json.dump({"$schema": "https://json.schemastore.org/sarif-2.1.0.json", "version": "2.1.0",
-               "runs": [{"tool": {"driver": {"name": "ste-check", "version": __version__,
+               "runs": [{"tool": {"driver": {"name": "ste", "version": __version__,
                                              "informationUri": "https://github.com/rmarinsky/ste-simplify",
                                              "rules": rules}},
                          "results": res}]}, out, indent=1)
@@ -703,8 +705,8 @@ def run(checker, a):
     return results
 
 
-def main(argv=None):
-    ap = argparse.ArgumentParser(prog="ste-check", description="Check text against Simplified Technical English.",
+def main(argv=None, prog="ste check"):
+    ap = argparse.ArgumentParser(prog=prog, description="Check text against Simplified Technical English.",
                                  epilog=__doc__.split("\n\n", 1)[1], formatter_class=argparse.RawDescriptionHelpFormatter)
     add_common_args(ap)
     ap.add_argument("--format", choices=("text", "json", "sarif"), default="text")
@@ -715,7 +717,7 @@ def main(argv=None):
     ap.add_argument("--words-only", action="store_true", help="check only words, not the writing rules")
     ap.add_argument("--rules-only", action="store_true", help="check only the writing rules, not words")
     ap.add_argument("--summary", action="store_true", help="one line for each file")
-    ap.add_argument("--version", action="version", version=f"ste-check {__version__}")
+    ap.add_argument("--version", action="version", version=f"ste {__version__}")
     a = ap.parse_args(argv)
     try:
         checker = make_checker(a)

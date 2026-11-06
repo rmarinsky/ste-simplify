@@ -1,6 +1,6 @@
 # Copy this file to .github/workflows/ste.yml.
 # Before you use it, add the repository secret STE_DICTIONARY_B64:
-#   ste-build-dictionary --lite ASD-STE100.pdf -o ste-lite.json
+#   ste build-dictionary --lite ASD-STE100.pdf -o ste-lite.json
 #   gzip -9c ste-lite.json | base64 | gh secret set STE_DICTIONARY_B64
 # The dictionary is copyrighted by ASD. Keep it in a secret. Do not commit it.
 name: STE check

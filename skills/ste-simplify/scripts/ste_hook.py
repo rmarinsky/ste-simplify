@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Claude Code PostToolUse hook: run ste-check on a Markdown file after Write or Edit.
+"""Claude Code PostToolUse hook: run ste check on a Markdown file after Write or Edit.
 
 When the file has STE errors, the hook writes the report to stderr and exits
 with code 2. Claude Code then shows the report to the model, and the model
@@ -32,7 +32,7 @@ def main():
     finally:
         sys.stdout = old
     if code == 1:
-        sys.stderr.write("ste-check found STE errors. Correct them, then run ste-check again.\n")
+        sys.stderr.write("ste check found STE errors. Correct them, then run ste check again.\n")
         sys.stderr.write(out.getvalue())
         return 2
     if code == 2:

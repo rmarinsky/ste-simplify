@@ -30,6 +30,10 @@ class PlanTests(unittest.TestCase):
         self.assertIsNone(p["replacement"])
         self.assertEqual(p["reason"], "the word is possibly not a verb here")
 
+    def test_part_of_hyphenated_word_is_not_safe(self):
+        p = self.plan("Use the main-tool file.")[0]
+        self.assertIsNone(p["replacement"])
+
     def test_inflected_form_is_not_safe(self):
         p = self.plan("You utilized the tool.")[0]
         self.assertIsNone(p["replacement"])
@@ -54,18 +58,47 @@ class CliTests(unittest.TestCase):
 
     def test_plan_does_not_change_the_file(self):
         code, out = run_cli(fix.main, [self.path])
+        self.assertIn("[1] ", out)
         self.assertIn("utilize -> use", out)
         self.assertIn("Sentences to rewrite", out)
         self.assertIn("You should utilize the tool.", read(self.path))
 
     def test_apply_changes_prose_only(self):
-        run_cli(fix.main, ["--apply", self.path])
+        run_cli(apply_main, [self.path])
         self.assertEqual(read(self.path), "You should use the tool.\n\n```\nutilize\n```\n")
 
     def test_stdin_apply_prints_text(self):
-        code, out = run_cli(fix.main, ["--apply", "--format", "json", "-"], stdin="Utilize the tool.\n")
+        code, out = run_cli(apply_main, ["--format", "json", "-"], stdin="Utilize the tool.\n")
         import json
         self.assertEqual(json.loads(out)["text"], "Use the tool.\n")
+
+
+class PushbackTests(unittest.TestCase):
+    TEXT = "Utilize the tool. It is an issue. Utilize the file.\n"
+
+    def run_apply(self, *args):
+        d = tempfile.mkdtemp()
+        try:
+            p = os.path.join(d, "a.md")
+            with open(p, "w") as f:
+                f.write(self.TEXT)
+            run_cli(apply_main, [*args, p])
+            return read(p)
+        finally:
+            shutil.rmtree(d)
+
+    def test_skip(self):
+        self.assertEqual(self.run_apply("--skip", "2"), "Use the tool. It is an issue. Use the file.\n")
+
+    def test_only(self):
+        self.assertEqual(self.run_apply("--only", "2-3"), "Utilize the tool. It is a problem. Use the file.\n")
+
+    def test_ids(self):
+        self.assertEqual(fix.ids("1, 3-5"), {1, 3, 4, 5})
+
+
+def apply_main(argv):
+    return fix.main(argv, apply=True)
 
 
 if __name__ == "__main__":
