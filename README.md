@@ -18,6 +18,43 @@ A model reads each word of an instruction. If a word has more than one sense, th
 
 No test that measures STE in agent instructions is available at this time. Thus, compare the results of your agents before and after the change. ASD also writes that AI tools can help with STE, but a person must examine the result ([ASD document about STE and AI, 2026](https://www.asd-ste100.org/assets/files/WhitePaper-ASD-STE100_and_AI.pdf)). Thus, `ste fix` has a review step.
 
+## Why an instruction is not sufficient
+
+You can tell a model "Follow ASD-STE100 style in your output". You can also give a long instruction with all the rules. The model reads the instruction, but nothing makes sure that the result obeys it. A harness examines each input and each output.
+
+We did a small test on 6 November 2026 with Claude Sonnet (`claude -p`). The model wrote one paragraph of a code review skill again, two times with each instruction. Then `ste scan --no-unknown` examined each result.
+
+| Text | STE errors |
+|---|---|
+| The paragraph before the change | 18 |
+| With "Follow ASD-STE100 style in your output." | 10 and 11 |
+| With the long instruction below | 7 and 9 |
+| The long instruction, then the `ste scan` report given back to the model one time | 1 |
+| The same, two times | 0 |
+
+<details>
+<summary>The long instruction</summary>
+
+<!-- ste-disable -->
+> Use plain technical English. Follow ASD-STE100 principles for sentence structure: use short sentences and direct wording, prefer active voice, and use passive voice only when the source does not name or imply a specific actor, rather than inventing one. Apply the same restraint to project-specific codes, labels, or classification tokens (e.g. P0-P3): reproduce them exactly and do not expand, reorder, or explain their meaning unless the source itself defines them. Use standard IT and software engineering terminology from Microsoft and Google style guides. Preserve the original technical meaning: do not replace precise technical terms with simpler words, and do not split a multi-word technical term if doing so would change what is claimed.
+<!-- ste-enable -->
+
+</details>
+
+The results show these points:
+
+- The model obeys the sentence rules. No result had a long sentence, a contraction or a semicolon.
+- The model does not know the word list. The words "meet", "block", "real", "would", "existing", "fix" and "ask" stayed. Each run gave a different text.
+- In one run, the model added a rule that was not in the paragraph: "Do not block for style or minor concerns".
+- All four results kept "the codebase bar". This word is approved, but not with this sense. Thus, the script also cannot find it.
+- The harness decreased the errors to 0 in two steps. But in the second step, the model changed "a genuine issue" to "a correct issue". This changes the sense of the rule.
+
+Thus, an instruction alone is not sufficient, and a script alone is also not sufficient. Use the three parts together:
+
+1. The instruction or the skill tells the model the rules.
+2. The harness examines each result: the Claude Code hooks, pre-commit and the GitHub Action. They give the report back to the model until there are no errors.
+3. A person examines the plan and the changed sentences, because only a person can find a change of sense.
+
 ## Legal use of the dictionary
 
 ASD has the copyright of ASD-STE100 and its dictionary. You must have written permission from ASD to make a copy of the document or a part of it. You must also have it to publish the document. ASD does not give this permission to persons or companies. Thus, this project obeys these rules:
