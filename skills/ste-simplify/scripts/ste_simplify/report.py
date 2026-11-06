@@ -80,19 +80,6 @@ def mark_words(sentence, words):
     return s
 
 
-def alt_html(data):
-    parts = []
-    for g in (data or {}).get("alternatives", [])[:4]:
-        alt = ", ".join(a["text"] + (f" ({a['pos']})" if a.get("pos") else "") for a in g["alternatives"]) \
-            or "No direct alternative"
-        ex = g.get("ste_example")
-        parts.append(f'<li><span class="alt">{esc(alt)}</span>'
-                     + (f'<span class="ex">{esc(ex)}</span>' if ex else "") + "</li>")
-    for h in (data or {}).get("help", []):
-        parts.append(f'<li><span class="ex">Help: {esc(h)}</span></li>')
-    return f'<ul class="alts">{"".join(parts)}</ul>' if parts else ""
-
-
 def alt_title(f):
     d = f.data or {}
     alts = [a["text"] + (f" ({a['pos']})" if a.get("pos") else "") for g in d.get("alternatives", []) for a in g["alternatives"]]
@@ -101,6 +88,55 @@ def alt_title(f):
     if d.get("forms"):
         return "Approved forms: " + ", ".join(d["forms"])
     return f.message
+
+
+def short(f):
+    """One short label for a finding, and the hover text with the STE examples."""
+    d = f.data or {}
+    alts, tips = [], []
+    for g in d.get("alternatives", []):
+        names = [a["text"] for a in g["alternatives"]]
+        alts += [n for n in names if n not in alts]
+        if g.get("ste_example"):
+            tips.append(f"{', '.join(names) or 'Rewrite'}: {g['ste_example']}")
+    tips += d.get("help", [])
+    w = f.word or ""
+    if f.rule in ("not-approved", "wrong-pos"):
+        label = f"{w} \u2192 {', '.join(alts[:3])}" if alts else f"{w}: rewrite"
+    elif f.rule == "wrong-form":
+        label = f"{w} \u2192 {', '.join(d.get('forms', [])[:4])}"
+    elif f.rule == "ing-form":
+        label = f"{w}: no -ing"
+    elif f.rule == "sentence-length":
+        label = f"{d.get('words')} words, max {d.get('limit')}"
+    elif f.rule == "paragraph-length":
+        nums = re.findall(r"\d+", f.message)
+        label = f"{nums[0]} sentences, max {nums[-1]}" if nums else "long paragraph"
+    elif f.rule == "passive-voice":
+        label = f"passive: {w}"
+    elif f.rule == "one-instruction":
+        label = "two instructions"
+    elif f.rule == "contraction":
+        label = f"{w}: contraction"
+    else:
+        label = RULE_NAMES.get(f.rule, f.rule).lower()
+    return label, "\n".join(tips) or f.message
+
+
+def merge_lines(groups):
+    """Put a finding with no sentence (semicolon, contraction) on the sentence of the same line."""
+    by_line = {}
+    for g, probs in groups:
+        if g["sentence"]:
+            by_line.setdefault(g["line"], (g, probs))
+    out = []
+    for g, probs in groups:
+        target = by_line.get(g["line"])
+        if not g["sentence"] and target:
+            target[1].extend(probs)
+        else:
+            out.append((g, probs))
+    return out
 
 
 def render(results, plan, rewrite, paths, texts, meta):
@@ -122,14 +158,21 @@ def render(results, plan, rewrite, paths, texts, meta):
                 unknown[path][f.key] += 1
     many = len(results) > 8
     body = []
+    if len(rows) > 1:
+        body.append('<div class="filters"><select id="rule" aria-label="Rule"><option value="">All rules</option>'
+                    f'{"".join(f"<option value={k}>{esc(v)}</option>" for k, v in RULE_NAMES.items())}</select>'
+                    '<label><input type="checkbox" id="warn" checked> Warnings</label>'
+                    '<input type="search" id="q" placeholder="Filter files" aria-label="Filter files"></div>')
     rows_sorted = sorted(rows, key=lambda r: (-r["errors"], r["path"]))
-    body.append('<table class="files"><thead><tr><th>File</th><th class="n">Errors</th><th class="n">Warnings</th>'
+    if len(rows) > 1:
+        body.append('<table class="files"><thead><tr><th>File</th><th class="n">Errors</th><th class="n">Warnings</th>'
                 '<th class="n">Safe</th><th class="n">Sentences</th></tr></thead><tbody>')
-    for i, r in enumerate(rows_sorted):
+    for i, r in enumerate(rows_sorted if len(rows) > 1 else []):
         body.append(f'<tr data-path="{esc(r["path"])}"><td><a href="#f{i}">{esc(r["path"])}</a></td>'
                     f'<td class="n">{r["errors"]}</td><td class="n">{r["warnings"]}</td>'
                     f'<td class="n">{r["safe"]}</td><td class="n">{r["sentences"]}</td></tr>')
-    body.append("</tbody></table>")
+    if len(rows) > 1:
+        body.append("</tbody></table>")
     for i, r in enumerate(rows_sorted):
         path = r["path"]
         lines = texts.get(path, "").split("\n")
@@ -137,12 +180,11 @@ def render(results, plan, rewrite, paths, texts, meta):
         sec = [f'<details class="file" id="f{i}" data-path="{esc(path)}"{open_attr}><summary>'
                f'<span class="path">{esc(path)}</span>'
                f'<span class="sub">{r["errors"]} errors, {r["warnings"]} warnings</span></summary>']
+        if len(rows) == 1:
+            sec = [f'<section class="file" id="f{i}" data-path="{esc(path)}"><h2 class="path">{esc(path)}</h2>']
         safe = sorted(by_file_safe.get(path, []), key=lambda p: p["id"])
         if safe:
-            sec.append('<h3>Safe replacements</h3><p class="sub">Clear a check box to keep the old word. '
-                       'The command at the top changes when you do this.</p>'
-                       '<table class="safe"><thead><tr><th></th><th class="n">No.</th><th class="n">Line</th>'
-                       '<th>Change</th></tr></thead><tbody>')
+            sec.append(f'<h3>Safe replacements <span class="sub">{len(safe)}</span></h3><table class="safe"><tbody>')
             for p in safe:
                 ln = lines[p["line"] - 1] if 0 < p["line"] <= len(lines) else ""
                 c = p["col"] - 1
@@ -152,45 +194,42 @@ def render(results, plan, rewrite, paths, texts, meta):
                 else:
                     change = f'<del>{esc(p["word"])}</del><ins>{esc(p["replacement"])}</ins>'
                 sec.append(f'<tr><td><input type="checkbox" class="keep" data-id="{p["id"]}" checked '
-                           f'aria-label="Apply replacement {p["id"]}"></td><td class="n id">{p["id"]}</td>'
-                           f'<td class="n">{p["line"]}</td><td class="change">{change}</td></tr>')
+                           f'aria-label="Apply replacement {p["id"]}"></td>'
+                           f'<td class="n line">{p["line"]}</td><td class="change">{change}</td></tr>')
             sec.append("</tbody></table>")
-        rw = by_file_rw.get(path, [])
+        rw = merge_lines(by_file_rw.get(path, []))
         if rw:
-            sec.append(f'<h3>Sentences to write again</h3>')
+            sec.append(f'<h3>Rewrite <span class="sub">{len(rw)}</span></h3>')
             for g, probs in sorted(rw, key=lambda x: x[0]["line"]):
                 words = [(f.word, alt_title(f), "w-" + f.rule) for f in probs if f.word and f.rule in WORD_RULES]
                 rules = " ".join(sorted({f.rule for f in probs}))
                 sev = "error" if any(f.severity == "error" for f in probs) else "warning"
                 text = g["sentence"] or (lines[g["line"] - 1].strip() if 0 < g["line"] <= len(lines) else "")
                 sec.append(f'<div class="sent" data-rules="{rules}" data-sev="{sev}">'
-                           f'<div class="line">Line {g["line"]}</div>'
-                           f'<blockquote>{mark_words(text, words)}</blockquote><ul class="probs">')
+                           f'<span class="line">{g["line"]}</span><div>'
+                           f'<blockquote>{mark_words(text, words)}</blockquote><div class="probs">')
                 for f in probs:
-                    head = RULE_NAMES.get(f.rule, f.rule)
-                    sec.append(f'<li data-rule="{f.rule}" data-sev="{f.severity}"><span class="rule {f.severity}">'
-                               f'{esc(head)}</span> {esc(f.message)}'
-                               + (alt_html(f.data) if f.rule in ("not-approved", "wrong-pos") else "") + "</li>")
-                sec.append("</ul></div>")
+                    label, tip = short(f)
+                    sec.append(f'<span class="p {f.severity}" data-rule="{f.rule}" data-sev="{f.severity}" '
+                               f'title="{esc(tip)}">{esc(label)}</span>')
+                sec.append("</div></div></div>")
         unk = unknown.get(path)
         if unk:
-            sec.append('<h3>Not in the dictionary</h3><p class="sub">Select the technical names of your project. '
-                       'The allow-list at the top shows the selected words.</p><div class="unk">')
+            sec.append(f'<h3>Unknown words <span class="sub">{len(unk)}</span></h3><div class="unk">')
             for w, n in sorted(unk.items(), key=lambda x: (-x[1], x[0])):
                 sec.append(f'<label><input type="checkbox" class="allow" value="{esc(w)}"> {esc(w)}'
                            + (f' <span class="sub">{n}</span>' if n > 1 else "") + "</label>")
             sec.append("</div>")
         if not (safe or rw or unk):
             sec.append('<p class="sub">No problems.</p>')
-        sec.append("</details>")
+        sec.append("</section>" if len(rows) == 1 else "</details>")
         body.append("".join(sec))
-    rule_opts = "".join(f'<option value="{k}">{esc(v)}</option>' for k, v in RULE_NAMES.items())
     cmd = {"paths": paths}
     return PAGE.format(
         title="STE report", when=esc(meta["when"]), files_text=f"{len(rows)} file" + ("" if len(rows) == 1 else "s"),
         errors=tot["errors"],
         warnings=tot["warnings"], safe=tot["safe"], sentences=tot["sentences"],
-        dictionary=esc(meta.get("dictionary", "")), rule_opts=rule_opts, body="\n".join(body),
+        body="\n".join(body),
         cmd_json=json.dumps(cmd).replace("</", "<\\/"),
         cmd=esc("ste fix --apply " + " ".join(shlex.quote(p) for p in paths)))
 
@@ -233,7 +272,7 @@ p {{ margin:4px 0; }}
 a {{ color:var(--accent); }}
 code, .cmd, .id {{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; }}
 .n {{ text-align:right; font-variant-numeric:tabular-nums; }}
-.tools {{ display:grid; grid-template-columns:1fr 1fr; gap:24px; margin:24px 0; }}
+.tools {{ display:grid; grid-template-columns:1fr 1fr; gap:24px; margin:20px 0 8px; }}
 .tools label {{ font-size:13px; color:var(--muted); display:block; margin-bottom:4px; }}
 .cmd, textarea {{ width:100%; background:var(--surface); color:var(--text); border:0; border-radius:6px;
   padding:10px 12px; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; }}
@@ -257,11 +296,18 @@ del {{ color:var(--del); background:var(--del-bg); text-decoration:line-through;
 ins {{ color:var(--ins); background:var(--ins-bg); text-decoration:none; padding:0 2px; border-radius:3px; }}
 tr.off ins {{ display:none; }}
 tr.off del {{ text-decoration:none; color:var(--text); background:none; }}
-.sent {{ margin:16px 0 0; }}
+.sent {{ display:grid; grid-template-columns:40px 1fr; margin:12px 0 0; }}
+.sent .line, td.line {{ color:var(--muted); font-size:13px; font-variant-numeric:tabular-nums; padding-top:9px; }}
+td.line {{ padding-top:6px; }}
+.probs {{ display:flex; flex-wrap:wrap; gap:2px 20px; font-size:13px; }}
+.p {{ cursor:help; }}
+.p.error {{ color:var(--del); }}
+.p.warning {{ color:var(--muted); }}
+h2.path {{ word-break:break-all; }}
 blockquote {{ margin:2px 0 6px; padding:8px 12px; background:var(--surface); border-radius:6px; }}
 mark {{ background:var(--mark); color:inherit; padding:0 2px; border-radius:3px; cursor:help; }}
 ul.probs {{ margin:0; padding-left:18px; }}
-ul.probs > li {{ margin:4px 0; }}
+.probs > .p {{ margin:4px 0; }}
 .rule {{ font-weight:600; }}
 .rule.error {{ color:var(--del); }}
 ul.alts {{ margin:2px 0 0; padding-left:16px; color:var(--muted); font-size:13px; }}
@@ -275,30 +321,23 @@ footer {{ margin-top:48px; color:var(--muted); font-size:13px; }}
 <body>
 <main>
 <h1>STE report</h1>
-<p class="sub">{when}. Dictionary: {dictionary}</p>
-<p>{files_text}: {errors} errors and {warnings} warnings. {safe} safe replacements and {sentences} sentences to write again.</p>
+<p class="sub">{when}, {files_text}, {errors} errors, {warnings} warnings</p>
 
 <div class="tools">
   <div>
-    <label>Command to apply the selected safe replacements</label>
+    <label>Apply</label>
     <div class="cmd" id="cmd">{cmd}</div>
     <button type="button" data-copy="cmd">Copy</button>
   </div>
   <div>
-    <label for="allow">Lines for .ste-allow.txt (select words in "Not in the dictionary")</label>
-    <textarea id="allow" readonly placeholder="No words selected"></textarea>
+    <label for="allow">.ste-allow.txt</label>
+    <textarea id="allow" readonly placeholder="Select unknown words"></textarea>
     <button type="button" data-copy="allow">Copy</button>
   </div>
 </div>
 
-<h2>Files</h2>
-<div class="filters">
-  <label>Rule <select id="rule"><option value="">All rules</option>{rule_opts}</select></label>
-  <label><input type="checkbox" id="warn" checked> Show warnings</label>
-  <label>File <input type="search" id="q" placeholder="Part of a path"></label>
-</div>
 {body}
-<footer>This page is on your computer only. It contains parts of your local ASD-STE100 dictionary. ASD has the copyright of the dictionary. Do not publish or share this page.</footer>
+<footer>Local only. Contains parts of the ASD-STE100 dictionary. Do not share.</footer>
 </main>
 <script type="application/json" id="data">{cmd_json}</script>
 <script>
@@ -317,16 +356,17 @@ footer {{ margin-top:48px; color:var(--muted); font-size:13px; }}
     document.getElementById('allow').value = words.join('\\n');
   }}
   function filter() {{
-    var rule = document.getElementById('rule').value, warn = document.getElementById('warn').checked,
-        text = document.getElementById('q').value.toLowerCase();
+    var r = document.getElementById('rule'), w = document.getElementById('warn'), t = document.getElementById('q');
+    if (!r) return;
+    var rule = r.value, warn = w.checked, text = t.value.toLowerCase();
     document.querySelectorAll('[data-path]').forEach(function (el) {{
       el.classList.toggle('hide', text !== '' && el.dataset.path.toLowerCase().indexOf(text) < 0);
     }});
-    document.querySelectorAll('ul.probs > li').forEach(function (li) {{
+    document.querySelectorAll('.probs > .p').forEach(function (li) {{
       li.classList.toggle('hide', (rule && li.dataset.rule !== rule) || (!warn && li.dataset.sev === 'warning'));
     }});
     document.querySelectorAll('.sent').forEach(function (s) {{
-      s.classList.toggle('hide', s.querySelectorAll('ul.probs > li:not(.hide)').length === 0);
+      s.classList.toggle('hide', s.querySelectorAll('.probs > .p:not(.hide)').length === 0);
     }});
     if (rule) document.querySelectorAll('details.file').forEach(function (d) {{ d.open = true; }});
   }}
@@ -334,7 +374,7 @@ footer {{ margin-top:48px; color:var(--muted); font-size:13px; }}
     if (e.target.matches('input.keep, input.allow')) update();
     if (e.target.matches('#rule, #warn')) filter();
   }});
-  document.getElementById('q').addEventListener('input', filter);
+  if (document.getElementById('q')) document.getElementById('q').addEventListener('input', filter);
   function openTarget() {{ var d = document.getElementById(location.hash.slice(1)); if (d && d.tagName === 'DETAILS') d.open = true; }}
   window.addEventListener('hashchange', openTarget); openTarget();
   document.querySelectorAll('button[data-copy]').forEach(function (b) {{
@@ -376,5 +416,5 @@ def emit(a, results, plan, rewrite, dict_path, stdin_text=None, out=None):
     meta = {"when": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), "dictionary": dict_path or ""}
     path = write(results, plan, rewrite, list(a.paths), texts, meta, a.html_out, not a.no_open)
     out.write(f"\nHTML report: {_uri(path)}\n")
-    out.write("The report contains parts of your local STE dictionary. Do not publish it.\n")
+    out.write("Local only. Do not share it: it contains parts of the STE dictionary.\n")
     return path

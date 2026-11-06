@@ -123,7 +123,8 @@ class ReportTests(unittest.TestCase):
         self.assertIn('<mark class="w-not-approved"', page)
         self.assertIn('value="gizmo"', page)
         self.assertIn("ste fix --apply a.md", page)
-        self.assertIn("Do not publish", page)
+        self.assertIn("Do not share", page)
+        self.assertIn("utilize \u2192 USE", page)
 
     def test_write_does_not_open_with_no_open(self):
         from ste_simplify import report

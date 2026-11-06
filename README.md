@@ -114,7 +114,7 @@ For a large folder, start with the files that the models read most frequently. F
 1. A short table in the terminal. It has one line for each file, with the errors, the warnings, the safe replacements and the sentences to write again.
 2. A full HTML page. The command opens it in your default browser. The page shows:
    - Each safe replacement in its line, with the word that it removes and the word that it adds. To keep the word in the text, click its check box. The page then makes the `ste fix --apply --skip N,N` command. Click Copy to get it.
-   - Each sentence to write again, with the problem words in a different color. Put the mouse pointer on a problem word to see the alternatives. Below the sentence, the page shows the alternatives and an STE example for each alternative.
+   - Each sentence to write again, with the problem words in a different color. Below the sentence, one short line gives each problem, for example `should → MUST, IF` or `27 words, max 20`. Put the mouse pointer on it to see the STE examples.
    - The words that are not in the dictionary. Select the technical names of your project. Then click Copy to get the lines for `.ste-allow.txt`.
    - Filters for each rule, for warnings and for file paths.
 
