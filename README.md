@@ -253,7 +253,7 @@ An instruction in a skill does not make the model run the check each time. A hoo
 - **Plans.** Before Claude shows a plan (`ExitPlanMode`), the hook examines it. If the plan has STE errors, Claude Code does not show it, and Claude writes the plan again.
 - **Instruction files.** After Claude writes `SKILL.md`, `AGENTS.md`, `CLAUDE.md`, `*.mdc`, `agents/*.md` or `commands/*.md`, the hook examines the lines that changed. It does not report errors in the remaining text. To examine other files, set `STE_HOOK_GLOBS`, for example `*.md,*.mdx`.
 
-The hooks report only errors, not warnings or unknown words. They do not examine text that has more Cyrillic letters than Latin letters. After three reports for the same plan or file in one session, the hooks stop and tell you. If there is no dictionary, the hooks do nothing.
+The hooks report only errors, not warnings or unknown words. A plan must be in English: if a plan has more than 20% Cyrillic letters, Claude must write it again. The hook does not examine such files. After three reports for the same plan or file in one session, the hooks stop and tell you. If there is no dictionary, the hooks do nothing.
 
 Use the full path to `ste` (`which ste`), because the app can start hooks with a different `PATH`. Without installation, use `python3 /path/to/skills/ste-simplify/scripts/ste_hook.py`.
 

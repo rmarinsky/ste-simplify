@@ -9,7 +9,8 @@ Claude Code sends the event as JSON to stdin.
   files (STE_HOOK_GLOBS) and only the lines that changed. If these lines have
   STE errors, the hook exits with code 2 and gives the report to Claude.
 
-The hook does not examine text with more than 20% Cyrillic letters. After three
+A plan with more than 20% Cyrillic letters is blocked: the plan must be in English.
+The hook does not examine files with more than 20% Cyrillic letters. After three
 reports for the same plan or file in one session, the hook stops and tells the user.
 """
 import argparse
@@ -102,7 +103,13 @@ def main(argv=None, prog="ste hook"):
     else:
         return 0
     if not english(text):
-        return 0
+        if tool != "ExitPlanMode":
+            return 0
+        if count_report(f"{event.get('session_id', '')}:plan-language", clean=False):
+            return 0
+        sys.stderr.write("ste: write the plan in English, in STE. Then call ExitPlanMode again. "
+                         "You can write the chat replies in the language of the user.\n")
+        return 2
     p = argparse.ArgumentParser()
     check.add_common_args(p)
     opts = p.parse_args([where] + (["--dictionary", a.dictionary] if a.dictionary else []))

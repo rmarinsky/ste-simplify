@@ -31,10 +31,13 @@ class PlanTests(unittest.TestCase):
         self.assertIn("should", err)
         self.assertIn("ExitPlanMode", err)
 
-    def test_clean_plan_and_cyrillic_plan_pass(self):
+    def test_clean_plan_passes(self):
         self.assertEqual(run_hook({"tool_name": "ExitPlanMode", "tool_input": {"plan": "Stop the tool."}})[0], 0)
-        plan = "Зупини інструмент. You should stop."
-        self.assertEqual(run_hook({"tool_name": "ExitPlanMode", "tool_input": {"plan": plan}})[0], 0)
+
+    def test_plan_must_be_in_english(self):
+        code, err, _ = run_hook({"tool_name": "ExitPlanMode", "tool_input": {"plan": "Зупини інструмент."}})
+        self.assertEqual(code, 2)
+        self.assertIn("English", err)
 
     def test_hook_stops_after_the_limit(self):
         event = {"tool_name": "ExitPlanMode", "tool_input": {"plan": "You should stop the tool."},
@@ -64,6 +67,11 @@ class FileTests(unittest.TestCase):
     def test_write_checks_all_lines(self):
         code = run_hook({"tool_name": "Write", "tool_input": {"file_path": self.skill}})[0]
         self.assertEqual(code, 2)
+
+    def test_cyrillic_file_is_not_checked(self):
+        with open(self.skill, "w") as f:
+            f.write("Зупини інструмент. Не використовуй should.\n")
+        self.assertEqual(run_hook({"tool_name": "Write", "tool_input": {"file_path": self.skill}})[0], 0)
 
     def test_other_files_are_not_checked(self):
         readme = os.path.join(self.dir, "README.md")
