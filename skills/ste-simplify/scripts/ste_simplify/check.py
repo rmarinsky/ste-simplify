@@ -654,7 +654,7 @@ def report_sarif(results, out):
 def add_common_args(ap):
     ap.add_argument("paths", nargs="*", default=["."], help="files or folders; '-' reads stdin")
     ap.add_argument("--dictionary", metavar="FILE", help="dictionary JSON (default: $STE_DICTIONARY or "
-                                                         "~/.config/ste-simplify/dictionary.json)")
+                                                         "~/.config/ste-simplify/dictionary.json.gz)")
     ap.add_argument("--allow", metavar="FILE", action="append", default=[],
                     help="allow-list of technical names, one for each line (you can use it more than one time)")
     ap.add_argument("--no-default-allow", action="store_true", help="do not load the built-in software allow-list")

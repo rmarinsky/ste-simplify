@@ -2,7 +2,7 @@
 """Build a local STE dictionary (JSON) from your own copy of the official PDF.
 
 Usage:
-  ste prepare [PDF] [-o OUT.json] [--lite]
+  ste prepare [-o OUT.json.gz] [--pdf FILE] [--lite]
 
 The script reads word positions with `pdftotext -bbox` (poppler) and splits
 each dictionary page into its four columns. It writes one JSON file with all
@@ -12,12 +12,14 @@ approved (with their approved alternatives and the example sentences).
 The dictionary is copyrighted by ASD. Keep the output file local.
 """
 import argparse
+import gzip
 import html
 import json
 import os
 import re
 import subprocess
 import sys
+import tempfile
 
 POS = r"n|v|adj|adv|prep|pron|conj|art|prefix|TN|TV"
 POS_RE = re.compile(r"\((%s)\)" % POS)
@@ -29,7 +31,7 @@ GAP = 6.0
 
 def default_out():
     base = os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
-    return os.path.join(base, "ste-simplify", "dictionary.json")
+    return os.path.join(base, "ste-simplify", "dictionary.json.gz")
 
 
 def bbox_xhtml(pdf):
@@ -329,22 +331,6 @@ PDF_URL = "https://www.asd-ste100.org/assets/files/ASD-STE100_ISSUE9.pdf"
 REQUEST_PAGE = "https://www.asd-ste100.org/STE_downloads.html"
 
 
-def cache_dir():
-    base = os.environ.get("XDG_CACHE_HOME") or os.path.expanduser("~/.cache")
-    return os.path.join(base, "ste-simplify")
-
-
-def find_pdf(dirs):
-    """Return the newest ASD-STE100*.pdf in the folders, or None."""
-    found = []
-    for d in dirs:
-        d = os.path.expanduser(d)
-        if os.path.isdir(d):
-            found += [os.path.join(d, f) for f in os.listdir(d)
-                      if f.lower().startswith("asd-ste100") and f.lower().endswith(".pdf")]
-    return max(found, key=os.path.getmtime) if found else None
-
-
 def download(url, dest):
     """Download the PDF from ASD to dest. Return dest, or None if it fails."""
     import urllib.request
@@ -369,53 +355,58 @@ def download(url, dest):
 def main(argv=None):
     ap = argparse.ArgumentParser(
         prog="ste prepare",
-        description="Make your local STE dictionary. Without PDF, the command looks for ASD-STE100*.pdf in "
-                    "~/Downloads and in the cache. If there is no PDF, it downloads the PDF from the ASD web site "
-                    "to your computer.")
-    ap.add_argument("pdf", nargs="?", help="your copy of the ASD-STE100 PDF")
-    ap.add_argument("-o", "--out", default=default_out())
-    ap.add_argument("--url", default=PDF_URL, help="where to download the PDF (default: the ASD web site)")
-    ap.add_argument("--no-download", action="store_true", help="do not download, use only a local PDF")
+        description="Download the ASD-STE100 PDF from the ASD web site and make your local STE dictionary. "
+                    "The PDF goes to a temporary folder and is deleted after the conversion.")
+    ap.add_argument("-o", "--out", default=default_out(), help="dictionary file (default: %(default)s)")
+    ap.add_argument("--url", default=PDF_URL, help="PDF address (default: the ASD web site)")
+    ap.add_argument("--pdf", metavar="FILE", help="use this PDF and do not download (for a computer without internet)")
     ap.add_argument("--lite", action="store_true",
                     help="omit meanings and example sentences (a small file, for CI secrets)")
     a = ap.parse_args(argv)
-    if a.pdf:
-        if not os.path.isfile(a.pdf):
-            print(f"PDF not found: {a.pdf}", file=sys.stderr)
-            return 2
-    else:
-        a.pdf = find_pdf(["~/Downloads", cache_dir()])
+    source = os.path.basename(a.pdf) if a.pdf else a.url
+    with tempfile.TemporaryDirectory(prefix="ste-") as tmp:
         if a.pdf:
-            print(f"Using {a.pdf}")
-        elif not a.no_download:
-            dest = os.path.join(cache_dir(), os.path.basename(a.url.split("?")[0]) or "ASD-STE100.pdf")
+            if not os.path.isfile(a.pdf):
+                print(f"PDF not found: {a.pdf}", file=sys.stderr)
+                return 2
+        else:
             print(f"Downloading the PDF from ASD: {a.url}")
-            a.pdf = download(a.url, dest)
-        if not a.pdf:
-            print("No ASD-STE100 PDF. Request a free copy from ASD, then run:\n"
-                  "  ste prepare /path/to/ASD-STE100.pdf\n"
-                  f"Request page: {REQUEST_PAGE}", file=sys.stderr)
-            return 2
-    entries = parse(bbox_xhtml(a.pdf))
+            a.pdf = download(a.url, os.path.join(tmp, "ASD-STE100.pdf"))
+            if not a.pdf:
+                print("If the link does not operate, request a free copy from ASD, then run:\n"
+                      "  ste prepare --pdf /path/to/ASD-STE100.pdf\n"
+                      f"Request page: {REQUEST_PAGE}", file=sys.stderr)
+                return 2
+        print("Converting the PDF to the dictionary...")
+        entries = parse(bbox_xhtml(a.pdf))
     if a.lite:
         entries = [lite(e) for e in entries]
     approved = [e for e in entries if e["approved"]]
     data = {
         "schema": 1,
-        "source": os.path.basename(a.pdf),
+        "source": source,
         "note": "Extracted from your own copy of the ASD-STE100 standard. Copyrighted by ASD. Do not publish.",
         "counts": {"approved": len(approved), "not_approved": len(entries) - len(approved)},
         "entries": entries,
     }
-    os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
-    with open(a.out, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=None if a.lite else 1,
-                  separators=(",", ":") if a.lite else None)
+    write(data, a.out)
     if len(approved) < 500 or len(entries) - len(approved) < 800:
         print("Warning: fewer entries than expected. Is this the ASD-STE100 Issue 9 PDF?", file=sys.stderr)
-    print(f"Wrote {a.out}: {data['counts']['approved']} approved entries, "
+    print(f"Wrote {a.out} ({os.path.getsize(a.out) // 1024} KB): {data['counts']['approved']} approved entries, "
           f"{data['counts']['not_approved']} not approved entries.")
     return 0
+
+
+def write(data, out):
+    """Write compact JSON. A name that ends with .gz gives a gzip file (about 160 KB for Issue 9)."""
+    os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
+    raw = json.dumps(data, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    if out.endswith(".gz"):
+        with gzip.open(out, "wb", compresslevel=9) as f:
+            f.write(raw)
+    else:
+        with open(out, "wb") as f:
+            f.write(raw)
 
 
 if __name__ == "__main__":

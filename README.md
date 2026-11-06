@@ -16,9 +16,9 @@ Make your local dictionary one time:
 ste prepare
 ```
 
-The command looks for `ASD-STE100*.pdf` in `~/Downloads`. If it does not find the PDF, it downloads the PDF from the ASD web site (https://www.asd-ste100.org/assets/files/ASD-STE100_ISSUE9.pdf) to `~/.cache/ste-simplify/`. Then it makes `~/.config/ste-simplify/dictionary.json` on your computer. You can also give the path of your PDF: `ste prepare /path/to/ASD-STE100.pdf`. If the download does not operate, request a free copy on https://www.asd-ste100.org/STE_downloads.html.
+The command downloads the PDF from the ASD web site (https://www.asd-ste100.org/assets/files/ASD-STE100_ISSUE9.pdf) to a temporary folder. It changes the PDF into the dictionary, and then it deletes the PDF. The dictionary is one small file on your computer: `~/.config/ste-simplify/dictionary.json.gz` (JSON with no spaces, in a gzip file of approximately 160 KB). If the download does not operate, request a free copy on https://www.asd-ste100.org/STE_downloads.html. Then run `ste prepare --pdf /path/to/ASD-STE100.pdf`.
 
-Keep the dictionary on your computer. Do not commit it and do not publish it. The `.gitignore` of this repository ignores `dictionary.json` and `*.pdf`.
+Keep the dictionary on your computer. Do not commit it and do not publish it. The `.gitignore` of this repository ignores the dictionary files and `*.pdf`.
 
 For Issue 9, the command finds 883 approved entries and 1320 entries that are not approved. The specification gives 875 approved words and 1274 words that are not approved. The numbers are different because some words have one entry for each part of speech.
 
@@ -180,7 +180,7 @@ pbpaste | ste fix --apply - | pbcopy
 
 ## pre-commit
 
-Use the example in `adapters/pre-commit-config.example.yaml`. The hook reads the dictionary from `~/.config/ste-simplify/dictionary.json` or from `STE_DICTIONARY`.
+Use the example in `adapters/pre-commit-config.example.yaml`. The hook reads the dictionary from `~/.config/ste-simplify/dictionary.json.gz` or from `STE_DICTIONARY`.
 
 ## GitHub Actions
 

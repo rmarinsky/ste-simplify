@@ -36,7 +36,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: ~/.config/ste-simplify
-        key: ste-dictionary-issue9-${{ runner.os }}
+        key: ste-dictionary-gz-issue9-${{ runner.os }}
     - name: Get the dictionary
       shell: bash
       env:
@@ -49,7 +49,7 @@ runs:
           mkdir -p "$RUNNER_TEMP/ste"
           printf '%s' "$STE_B64" | base64 -d | gunzip > "$RUNNER_TEMP/ste/dictionary.json"
           echo "STE_DICTIONARY=$RUNNER_TEMP/ste/dictionary.json" >> "$GITHUB_ENV"
-        elif [ ! -f ~/.config/ste-simplify/dictionary.json ]; then
+        elif [ ! -f ~/.config/ste-simplify/dictionary.json.gz ]; then
           command -v pdftotext >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils; }
           ste prepare
         fi

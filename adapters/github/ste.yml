@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: rmarinsky/ste-simplify@v0.2.0
+      - uses: rmarinsky/ste-simplify@v0.3.0
         with:
           paths: "docs README.md"
           args: "--no-unknown"

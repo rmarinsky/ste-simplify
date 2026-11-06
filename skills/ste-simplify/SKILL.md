@@ -22,7 +22,7 @@ The script uses a local dictionary. If the script shows "No STE dictionary found
 ste prepare
 ```
 
-The command downloads the PDF from the ASD web site to the computer of the user, and makes the dictionary from it. If the command does not operate, tell the user to request a free copy on https://www.asd-ste100.org/STE_downloads.html, and to run `ste prepare /path/to/the.pdf`.
+The command downloads the PDF from the ASD web site to the computer of the user, and makes the dictionary from it. If the command does not operate, tell the user to request a free copy on https://www.asd-ste100.org/STE_downloads.html, and to run `ste prepare --pdf /path/to/the.pdf`.
 
 Do not write a word list. Do not get word lists from the web. The dictionary is the property of ASD.
 

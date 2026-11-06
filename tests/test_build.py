@@ -128,14 +128,6 @@ class PrepareTests(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.dir)
 
-    def test_find_newest_pdf(self):
-        for name in ("ASD-STE100_ISSUE8.pdf", "ASD-STE100_ISSUE9.pdf", "other.pdf"):
-            with open(os.path.join(self.dir, name), "wb") as f:
-                f.write(b"%PDF-1.7")
-        os.utime(os.path.join(self.dir, "ASD-STE100_ISSUE8.pdf"), (1, 1))
-        self.assertEqual(os.path.basename(build.find_pdf([self.dir])), "ASD-STE100_ISSUE9.pdf")
-        self.assertIsNone(build.find_pdf([os.path.join(self.dir, "none")]))
-
     def test_download_checks_the_file_type(self):
         src = os.path.join(self.dir, "a.pdf")
         with open(src, "wb") as f:
@@ -150,8 +142,25 @@ class PrepareTests(unittest.TestCase):
     def test_no_pdf_shows_the_request_page(self):
         err = io.StringIO()
         with redirect_stderr(err):
-            code = build.main([os.path.join(self.dir, "missing.pdf")])
+            code = build.main(["--pdf", os.path.join(self.dir, "missing.pdf")])
         self.assertEqual(code, 2)
+        with redirect_stderr(err):
+            code = build.main(["--url", "file://" + os.path.join(self.dir, "none.pdf")])
+        self.assertEqual(code, 2)
+        self.assertIn("ste prepare --pdf", err.getvalue())
+
+    def test_write_compact_and_gzip(self):
+        import gzip
+        import json
+        data = {"entries": [{"word": "a", "approved": True}]}
+        for name in ("d.json", "d.json.gz"):
+            out = os.path.join(self.dir, name)
+            build.write(data, out)
+            opener = gzip.open if name.endswith(".gz") else open
+            with opener(out, "rt", encoding="utf-8") as f:
+                text = f.read()
+            self.assertEqual(json.loads(text), data)
+            self.assertNotIn("\n", text)
 
 
 @unittest.skipUnless(os.environ.get("STE_PDF"), "set STE_PDF to the official PDF to run this test")

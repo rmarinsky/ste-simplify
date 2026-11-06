@@ -1,6 +1,8 @@
 # The STE dictionary is copyrighted by ASD. Never commit it or the PDF.
 dictionary.json
+dictionary.json.gz
 *.dictionary.json
+*.json.gz
 ste-dictionary*.json
 *.pdf
 *.sarif

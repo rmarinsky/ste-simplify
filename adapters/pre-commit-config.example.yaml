@@ -1,9 +1,9 @@
 # Add this to .pre-commit-config.yaml in your project.
-# The hook reads the dictionary from ~/.config/ste-simplify/dictionary.json or $STE_DICTIONARY.
+# The hook reads the dictionary from ~/.config/ste-simplify/dictionary.json.gz or $STE_DICTIONARY.
 # Build it one time: ste prepare
 repos:
   - repo: https://github.com/rmarinsky/ste-simplify
-    rev: v0.2.0
+    rev: v0.3.0
     hooks:
       - id: ste-check
         args: [--no-unknown]

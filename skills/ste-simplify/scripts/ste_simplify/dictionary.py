@@ -4,12 +4,13 @@ The dictionary file is made by build.py from the user's own copy of the
 standard. This module has no word lists from the standard. It has only
 general English morphology (plural, past, -ing, -ly, -er and irregular verbs).
 """
+import gzip
 import json
 import os
 import re
 
 CONFIG_DIR = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "ste-simplify")
-DEFAULT_PATH = os.path.join(CONFIG_DIR, "dictionary.json")
+DEFAULT_PATH = os.path.join(CONFIG_DIR, "dictionary.json.gz")
 
 # Common irregular verbs: past or participle -> base form. General English, not from the standard.
 IRREGULAR = {
@@ -147,7 +148,8 @@ class Dictionary:
                 "  ste prepare\n"
                 f"It writes {DEFAULT_PATH}. Or pass --dictionary FILE, or set STE_DICTIONARY.\n"
                 "Request the free PDF at https://www.asd-ste100.org")
-        with open(p, encoding="utf-8") as f:
+        opener = gzip.open if p.endswith(".gz") else open
+        with opener(p, "rt", encoding="utf-8") as f:
             return cls(json.load(f))
 
     def is_approved_form(self, w):
