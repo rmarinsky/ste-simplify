@@ -458,6 +458,8 @@ class Checker:
             return "v"
         if first:
             return None
+        if prev == "not" and i >= 2 and low[i - 2] in BE:
+            return None  # "is not clear": an adjective, not a verb
         if prev in VERB_PREV:
             return "v"
         if prev in NOUN_PREV:

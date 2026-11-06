@@ -1,10 +1,22 @@
 # ste-simplify
 
-Write and check text in Simplified Technical English (STE). Use it for agent instructions, skills, prompts, specs, READMEs, docs and chat replies. It operates in Claude Code, Codex, Cursor, pre-commit, GitHub Actions and a terminal.
+Make the instructions for your AI agents clear and easy to read. This tool changes the text of your skills, agent files, rules, prompts and docs into Simplified Technical English (STE).
+
+Use it on the text in your files. The script finds each word and each sentence that is not clear. It makes a plan for each change. You examine the plan. Then the model writes only the flagged sentences again. It operates in Claude Code, Codex, Cursor, pre-commit, GitHub Actions and a terminal.
 
 STE is a controlled language. It has a dictionary of approved words and a set of writing rules. Each approved word has only one sense. The specification is ASD-STE100 from ASD (AeroSpace, Security and Defence Industries Association of Europe). This project is compatible with ASD-STE100 Issue 9. ASD did not make this project, and ASD does not endorse it.
 
-Words with more than one sense cause errors in instructions for models. A skill that tells a model to "meet the bar" or to "use the house standard" does not give a clear rule. STE removes these words. Scripts find the problems, and the model writes only the sentences that the scripts show.
+## How STE helps agents
+
+A model reads each word of an instruction. If a word has more than one sense, the model selects one sense. It can select the incorrect sense. For example, "meet the bar" or "use the house standard" do not give a clear rule. STE gives these results:
+
+- Each word has one sense. The model cannot select the incorrect sense.
+- Each sentence has one instruction, with a maximum of 20 words. Tests show that a model obeys a smaller number of conditions when one instruction has many conditions ([FollowBench, ACL 2024](https://arxiv.org/abs/2310.20410)).
+- A smaller number of words with more than one sense. Tests show that requests that are not clear decrease the precision of models. Models also frequently continue and do not tell the user about the problem ([Clarify When Necessary, 2023](https://arxiv.org/abs/2311.09469)).
+- The same words for the same items in all files. Thus, two skills or two rules do not give different data about one item.
+- Persons can also read the text more easily. In a test at Boeing, persons made a smaller number of errors with long procedures in STE. Persons with a first language that is not English got the most help ([Shubert, 1995](https://doi.org/10.2190/WG69-D74B-4DLL-2WBK)).
+
+No test that measures STE in agent instructions is available at this time. Thus, compare the results of your agents before and after the change. ASD also writes that AI tools can help with STE, but a person must examine the result ([ASD document about STE and AI, 2026](https://www.asd-ste100.org/assets/files/WhitePaper-ASD-STE100_and_AI.pdf)). Thus, `ste fix` has a review step.
 
 ## Legal use of the dictionary
 

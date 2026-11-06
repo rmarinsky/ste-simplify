@@ -21,3 +21,5 @@ legal
 legal advice
 copyright notice
 permission
+language
+languages
