@@ -248,7 +248,14 @@ cp -r skills/ste-simplify ~/.claude/skills/
 
 The skill tells the model to run `ste fix` and to show the plan to you. After you give your approval, the model runs `ste fix --apply`, writes the flagged sentences again and runs `ste scan` until there are no errors. For skill files and agent files, the skill keeps the trigger phrases and the front matter keys.
 
-To examine each Markdown file after Claude writes it, add the hook in `adapters/claude-code/settings.example.json` to your settings. The hook runs `ste_hook.py`. When the file has STE errors, the hook gives the report to Claude.
+An instruction in a skill does not make the model run the check each time. A hook does, because Claude Code runs it. Add the hooks in `adapters/claude-code/settings.example.json` to `~/.claude/settings.json`. The two hooks run `ste hook`:
+
+- **Plans.** Before Claude shows a plan (`ExitPlanMode`), the hook examines it. If the plan has STE errors, Claude Code does not show it, and Claude writes the plan again.
+- **Instruction files.** After Claude writes `SKILL.md`, `AGENTS.md`, `CLAUDE.md`, `*.mdc`, `agents/*.md` or `commands/*.md`, the hook examines the lines that changed. It does not report errors in the remaining text. To examine other files, set `STE_HOOK_GLOBS`, for example `*.md,*.mdx`.
+
+The hooks report only errors, not warnings or unknown words. They do not examine text that has more Cyrillic letters than Latin letters. After three reports for the same plan or file in one session, the hooks stop and tell you. If there is no dictionary, the hooks do nothing.
+
+Use the full path to `ste` (`which ste`), because the app can start hooks with a different `PATH`. Without installation, use `python3 /path/to/skills/ste-simplify/scripts/ste_hook.py`.
 
 ## Codex
 

@@ -4,12 +4,13 @@
   ste scan PATH...                        report problems (exit code 1 when there are errors)
   ste fix PATH...                         numbered plan: safe replacements and sentences to write again
   ste fix --apply [--skip N,N] PATH...    write the safe replacements that the person kept
+  ste hook                                Claude Code hook for plans and instruction files (reads the event on stdin)
 
 Run "ste COMMAND --help" for the options of a command.
 """
 import sys
 
-from . import __version__, build, check, fix
+from . import __version__, build, check, fix, hook
 
 
 def main(argv=None):
@@ -21,7 +22,7 @@ def main(argv=None):
         print(f"ste {__version__}")
         return 0
     cmd, rest = argv[0], argv[1:]
-    run = {"prepare": build.main, "scan": check.main, "fix": fix.main}.get(cmd)
+    run = {"prepare": build.main, "scan": check.main, "fix": fix.main, "hook": hook.main}.get(cmd)
     if run:
         try:
             return run(rest)
